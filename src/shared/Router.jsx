@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Profile from "../pages/Profile";
 
 const Router = () => {
   return (
