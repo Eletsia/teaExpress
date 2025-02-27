@@ -1,6 +1,16 @@
 import Header from "../components/Header";
+import Footer from "../components/Footer";
+
 const Home = () => {
-  return <Header />;
+  return (
+    <div className="flex h-screen w-screen flex-col">
+      <Header />
+      <div className="flex flex-1 items-center justify-center bg-gray-500">
+        콘텐츠 영역
+      </div>
+      <Footer />
+    </div>
+  );
 };
 
 export default Home;
