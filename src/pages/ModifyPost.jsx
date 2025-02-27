@@ -1,11 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getPostById, updatePost } from "../api/postApi";
 
 const ModifyPost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const queryClient = useQueryClient();
+  const { postId } = useParams();
+
 
   const {
     data: post,
@@ -13,8 +17,17 @@ const ModifyPost = () => {
     isError,
   } = useQuery({
     queryKey: ["post"],
-    queryFn: getPostById,
+    queryFn: () => getPostById(postId),
   });
+
+  useEffect(() => {
+    if(post){
+      setTitle(post.title)
+      setContent(post.content)
+      setImage(post.img_list)
+    }
+    
+  }, [post])
 
   const mutation = useMutation({
     mutationFn: ({ newData, id }) => updatePost(newData, id),
@@ -34,8 +47,25 @@ const ModifyPost = () => {
   
 
   // 게시물 등록 핸들러
-  const onSubmitHandler = async e => {
+  const onSubmitHandler = e => {
     e.preventDefault();
+
+    if (!post) {
+      alert("게시물 정보를 불러오지 못했습니다.");
+      return;
+    }
+
+    mutation.mutate({
+      id: post.post_id,
+      newData: {
+        title,
+        content,
+        img_list: post.img_list,
+        location: post.location,
+        lat: post.lat,
+        lng: post.lng,
+      },
+    });
   };
 
   return (
