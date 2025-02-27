@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ModifyPost from "../pages/ModifyPost";
+import Profile from "../pages/Profile";
 
 const Router = () => {
   return (
