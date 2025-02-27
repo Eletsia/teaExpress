@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import ModifyPost from "../pages/ModifyPost";
 
 const Router = () => {
   return (
