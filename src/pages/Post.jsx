@@ -51,14 +51,14 @@ const Post = () => {
   }
 
   const commentAddHandler = () => {
-    if(!comment.trim()){
-        alert("댓글을 입력해주세요!");
-        return;
+    if (!comment.trim()) {
+      alert("댓글을 입력해주세요!");
+      return;
     }
 
     mutation.mutate({
-        // 로그인한 유저 uid
-      id: post.uid, 
+      // 로그인한 유저 uid
+      id: post.uid,
       newData: {
         post_id: post.post_id,
         content: comment,
@@ -80,7 +80,7 @@ const Post = () => {
       <div className="bg-blue-300 flex flex-col w-1/2">
         <div className="bg-violet-300 flex flex-row items-center justify-between p-4">
           <p className="p-2 text-2xl">제목</p>
-          <div>
+          <div className="flex gap-2">
             <button>좋아요</button>
             <button>북마크</button>
           </div>
@@ -96,21 +96,25 @@ const Post = () => {
           <p className="p-2 text-2xl">댓글리스트</p>
           <ul>
             {comments?.map(comment => (
-              <li key={comment.comment_id}>
-
-                {comment.content}
-                </li>
+              <li key={comment.comment_id}>{comment.content}</li>
             ))}
           </ul>
-          <input
-            type="text"
-            name=""
-            id=""
-            placeholder="댓글을 입력해주세요."
-            onChange={e => setComment(e.target.value)}
-            className="p-2 border border-gray-300 rounded-lg w-full "
-          />
-          <button onClick={commentAddHandler}>추가</button>
+          <div className="flex flex-row gap-4">
+            <input
+              type="text"
+              name=""
+              id=""
+              placeholder="댓글을 입력해주세요."
+              onChange={e => setComment(e.target.value)}
+              className="p-2 flex-2 border border-gray-300 rounded-lg w-full "
+            />
+            <button
+              onClick={commentAddHandler}
+              className="bg-blue-500 text-white w-1/6 rounded-lg p-2 hover:bg-blue-600 transition "
+            >
+              추가
+            </button>
+          </div>
         </div>
       </div>
     </div>
