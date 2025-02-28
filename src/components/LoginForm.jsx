@@ -1,13 +1,13 @@
 /// 로그인, 회원가입을 처리하는 폼 컴포넌트
 
 import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useLoginAuth } from "../hooks/useLoginAuth";
 
 const LoginForm = ({ type }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
-  const { signInMutation, signUpMutation } = useAuth();
+  const { signInMutation, signUpMutation } = useLoginAuth();
 
   const handleSubmit = e => {
     e.preventDefault();

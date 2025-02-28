@@ -1,5 +1,5 @@
 import React from "react";
 
-const Signup = () => <AuthForm type="signup" />;
+const Signup = () => <SignUpForm type="signup" />;
 
 export default Signup;

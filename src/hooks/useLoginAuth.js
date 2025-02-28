@@ -1,37 +1,60 @@
-// → useQuery → Supabase에서 로그인 상태를 가져옴.
-// → useMutation → 로그인/회원가입 요청을 보냄.
-// → Zustand setUser를 이용해서 로그인한 유저 정보를 저장함.
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import React from "react";
+import { supabase } from "../api/loginSupaClient"; // supabase 클라이언트 불러오기
+import { loginUseAuth } from "../store/loginStore"; // Zustand 상태관리 import
 
-// 현재 로그인한 유저 정보를 가져오는 쿼리
+const queryClient = new QueryClient(); // QueryClient 인스턴스 생성
+
+// 로그인 API 호출
+const signIn = async ({ email, password }) => {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (error) throw error;
+  return data;
+};
+
+// 회원가입 API 호출
+const signUp = async ({ email, password, nickname }) => {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { data: { nickname } },
+  });
+  if (error) throw error;
+  return data;
+};
+
+// 로그인 상태 관리 훅
 export const useLoginAuth = () => {
-  const { user, setUser, logout } = useLoginStore();
+  const { user, setUser, logout } = loginUseAuth();
+
+  // 현재 로그인한 유저 정보를 가져오는 쿼리
   useQuery({
     queryKey: ["authUser"],
-    queryKey: async () => {
-      const { data } = await supabase.auth.getuser();
+    queryFn: async () => {
+      const { data } = await supabase.auth.getUser();
       return data.user;
     },
     onSuccess: user => setUser(user),
-    staleTime: 1000 * 60 * 5, // 데이터를 5분 동안 캐싱(불필요한 요청 방지)
+    staleTime: 1000 * 60 * 5, // 5분 동안 캐싱 (불필요한 요청 방지)
   });
 
-  // 로그인 요청을 처리하는 Mutation
-  const signMutation = useMutation({
+  // 로그인 요청 처리
+  const signInMutation = useMutation({
     mutationFn: signIn,
     onSuccess: data => {
       setUser(data.user);
-      QueryClient.invalidateQueries(["authUser"]); // 로그인 성공 후 유저 정보 없뎃
+      queryClient.invalidateQueries(["authUser"]); // 로그인 후 유저 정보 갱신
     },
   });
 
-  // 회원가입 요청을 처리하는 Mutation
+  // 회원가입 요청 처리
   const signUpMutation = useMutation({
     mutationFn: signUp,
     onSuccess: data => {
       setUser(data);
-      queryClient.invalidateQueries(["authUser"]);
+      queryClient.invalidateQueries(["authUser"]); // 회원가입 후 유저 정보 갱신
     },
   });
 
