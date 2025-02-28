@@ -1,6 +1,11 @@
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
 const Profile = () => {
   return (
     <>
+    <Header />
+    
       {/* 반응형 컨테이너 : 작은 화면에서는 세로, 큰 화면에서는 가로 정렬 */}
       <div className="w-screen min-h-screen bg-yellow-100 flex flex-col items-center justify-center p-8">
         <div className="bg-red-400 container mx-auto flex flex-col items-center md:flex-row gap-4 max-md:gap-10">
@@ -48,6 +53,8 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </>
   );
 };
