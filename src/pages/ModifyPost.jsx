@@ -10,13 +10,13 @@ const ModifyPost = () => {
   const queryClient = useQueryClient();
   const { postId } = useParams();
 
-
+  // 게시물 정보 가져오기
   const {
     data: post,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["post"],
+    queryKey: ["post",postId],
     queryFn: () => getPostById(postId),
   });
 
@@ -29,6 +29,7 @@ const ModifyPost = () => {
     
   }, [post])
 
+//게시물 수정
   const mutation = useMutation({
     mutationFn: ({ newData, id }) => updatePost(newData, id),
     onSuccess: () => {
@@ -111,6 +112,7 @@ const ModifyPost = () => {
               className="p-2 border border-gray-300 rounded-lg focus:outline-blue-500 h-32 resize-none"
             />
           </label>
+          <p>{post.location}</p>
         </div>
       </div>
 
