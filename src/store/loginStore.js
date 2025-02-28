@@ -5,10 +5,10 @@ import { create } from "zustand";
 import { supabase } from "../api/loginSupaClient";
 
 export const loginUseAuth = create(set => ({
-  user: null,
-  setUser: user => set({ user }),
+  user: null, // 현재 로그인한 사용자 정보 저장
+  setUser: user => set({ user }), // 사용자 정보 업데이트 함수
   logout: async () => {
-    await supabase.auth.signOut();
-    set({ user: null });
+    await supabase.auth.signOut(); // Supabase에서 로그아웃 수행
+    set({ user: null }); // Zustand 상태에서도 초기화
   },
 }));

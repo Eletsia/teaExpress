@@ -6,7 +6,7 @@ import { supabase } from "./loginSupaClient";
 export const signUp = async ({ email, password, nickname }) => {
   const { user, error } = await supabase.auth.signUp({ email, password });
   if (error) throw error;
-
+  // 회원가입 시 users 테이블에 추가 정보 저장
   await supabase.from(user).insert([{ uid: user.id, email, nickname }]);
 
   return user;
