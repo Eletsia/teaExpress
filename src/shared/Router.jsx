@@ -14,6 +14,7 @@ const Router = () => {
         <Route path="/posts-modify" element={<ModifyPost />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/results" element={<TestResult />} />  */}
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
