@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { loadFile, uploadFile } from "../api/imgApi";
 import { getPostById, updatePost } from "../api/postApi";
 import supabase from "../shared/supabase";
@@ -13,9 +13,10 @@ const { data, error } = await supabase.auth.signInWithPassword({
 const ModifyPost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState("");
   const queryClient = useQueryClient();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   // 게시물 정보 가져오기
   const {
@@ -25,21 +26,22 @@ const ModifyPost = () => {
   } = useQuery({
     queryKey: ["post", id],
     queryFn: () => getPostById(+id),
+    staleTime: 1000 * 60 * 5,  //5분동안 캐시 유지
   });
   console.log("post:",post)
 
-  useEffect(() => {
-    if (post?.length > 0) {
-      setTitle(post[0].title);
-      setContent(post[0].content);
-    }
-  }, [post]);
+   // 데이터가 존재할 때만 상태 업데이트
+   const currentTitle = title || post?.[0]?.title || "";
+   const currentContent = content || post?.[0]?.content || "";
+   const currentImage = post?.[0]?.img_list || null;
 
   //게시물 수정
   const mutation = useMutation({
     mutationFn: ({ newData, id }) => updatePost(newData, id),
     onSuccess: () => {
       queryClient.invalidateQueries(["post"]);
+      alert("게시물이 수정되었습니다.");
+      navigate(`/posts/${id}`);
     },
   });
 
@@ -52,25 +54,24 @@ const ModifyPost = () => {
   }
 
   // 게시물 등록 핸들러
-  const onSubmitHandler = e => {
+  const onSubmitHandler = async e => {
     e.preventDefault();
 
-    if (!post) {
-      alert("게시물 정보를 불러오지 못했습니다.");
-      return;
+    let updatedImage = currentImage; // 기존 이미지 유지
+
+    if (image) {
+      await uploadFile(image);
+      updatedImage = await loadFile(image.name);
     }
-    //파일 업로드
-    uploadFile(image)
-    //파일URL 불러오기
-    const loadedImage = loadFile(image)
+    
 
-
+    // id 숫자타입으로 변경
     mutation.mutate({
       id: +id,
       newData: {
-        title,
-        content,
-        img_list: loadedImage,
+        title: currentTitle,
+        content: currentContent,
+        img_list: updatedImage,
         location: post[0].location,
         lat: post[0].lat,
         lng: post[0].lng,
@@ -78,7 +79,6 @@ const ModifyPost = () => {
     });
   };
 
-  
 
   return (
     <form
@@ -89,9 +89,9 @@ const ModifyPost = () => {
       <div>현재 파라미터는 {id} 입니다.</div>
       <div className="flex gap-6 w-full">
         <div className="flex flex-col items-center gap-4">
-          {image && (
+          {currentImage && (
             <img
-              src={image}
+              src={currentImage}
               alt="preview"
               className="w-48 h-auto rounded-lg shadow"
             />
@@ -109,7 +109,7 @@ const ModifyPost = () => {
             <input
               type="text"
               value={title}
-              placeholder="제목을 입력하세요."
+              placeholder={post[0].title}
               onChange={e => setTitle(e.target.value)}
               className="p-2 border border-gray-300 rounded-lg focus:outline-blue-500"
             />
@@ -137,6 +137,7 @@ const ModifyPost = () => {
         </button>
         <button
           type="button"
+          onClick={() => navigate(-1)}
           className="bg-gray-400 text-white px-6 py-2 rounded-lg hover:bg-gray-500 transition"
         >
           뒤로가기
