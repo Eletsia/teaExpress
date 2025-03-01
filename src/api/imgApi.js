@@ -16,8 +16,8 @@ async function uploadFile(file) {
   
   async function loadFile(file_path) {
     const { data } = supabase.storage.from("post_img").getPublicUrl(file_path);
-    console.log("loadFile: ", data);
-    return data;
+    console.log("loadFile: ", data.publicUrl);
+    return data.publicUrl;
   }
   
   export { uploadFile, loadFile };
