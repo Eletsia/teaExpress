@@ -8,7 +8,7 @@ const ModifyPost = () => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const queryClient = useQueryClient();
-  const { postId } = useParams();
+  const { id } = useParams();
 
   // 게시물 정보 가져오기
   const {
@@ -16,20 +16,13 @@ const ModifyPost = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["post",postId],
-    queryFn: () => getPostById(postId),
+    queryKey: ["post", id],
+    queryFn: () => getPostById(+id),
   });
 
-  useEffect(() => {
-    if(post){
-      setTitle(post.title)
-      setContent(post.content)
-      setImage(post.img_list)
-    }
-    
-  }, [post])
+  console.log(post);
 
-//게시물 수정
+  //게시물 수정
   const mutation = useMutation({
     mutationFn: ({ newData, id }) => updatePost(newData, id),
     onSuccess: () => {
@@ -44,8 +37,6 @@ const ModifyPost = () => {
   if (isError) {
     return <div>데이터 조회 중 오류가 발생했습니다.</div>;
   }
-
-  
 
   // 게시물 등록 핸들러
   const onSubmitHandler = e => {
@@ -75,6 +66,7 @@ const ModifyPost = () => {
       onSubmit={onSubmitHandler}
     >
       <h3 className="text-2xl font-bold">게시물 수정페이지</h3>
+      <div>현재 파라미터는 {id} 입니다.</div>
       <div className="flex gap-6 w-full">
         <div className="flex flex-col items-center gap-4">
           {image && (
