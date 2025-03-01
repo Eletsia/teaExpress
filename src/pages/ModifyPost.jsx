@@ -1,7 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { loadFile, uploadFile } from "../api/imgApi";
 import { getPostById, updatePost } from "../api/postApi";
+import supabase from "../shared/supabase";
+
+const { data, error } = await supabase.auth.signInWithPassword({
+  email: 'red@gmail.com',
+  password: 'red',
+  })
 
 const ModifyPost = () => {
   const [title, setTitle] = useState("");
@@ -19,8 +26,14 @@ const ModifyPost = () => {
     queryKey: ["post", id],
     queryFn: () => getPostById(+id),
   });
+  console.log("post:",post)
 
-  console.log(post);
+  useEffect(() => {
+    if (post?.length > 0) {
+      setTitle(post[0].title);
+      setContent(post[0].content);
+    }
+  }, [post]);
 
   //게시물 수정
   const mutation = useMutation({
@@ -46,19 +59,26 @@ const ModifyPost = () => {
       alert("게시물 정보를 불러오지 못했습니다.");
       return;
     }
+    //파일 업로드
+    uploadFile(image)
+    //파일URL 불러오기
+    const loadedImage = loadFile(image)
+
 
     mutation.mutate({
-      id: post.post_id,
+      id: +id,
       newData: {
         title,
         content,
-        img_list: post.img_list,
-        location: post.location,
-        lat: post.lat,
-        lng: post.lng,
+        img_list: loadedImage,
+        location: post[0].location,
+        lat: post[0].lat,
+        lng: post[0].lng,
       },
     });
   };
+
+  
 
   return (
     <form
@@ -104,7 +124,7 @@ const ModifyPost = () => {
               className="p-2 border border-gray-300 rounded-lg focus:outline-blue-500 h-32 resize-none"
             />
           </label>
-          <p>{post.location}</p>
+          <p>{post?.[0]?.location || "위치 정보 없음"}</p>
         </div>
       </div>
 
@@ -113,7 +133,7 @@ const ModifyPost = () => {
           type="submit"
           className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition"
         >
-          등록하기
+          수정하기
         </button>
         <button
           type="button"
