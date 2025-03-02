@@ -1,12 +1,14 @@
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { supabase } from "../api/loginSupaClient"; // supabase 클라이언트 불러오기
+ // supabase 클라이언트 불러오기
 import { loginUseAuth } from "../store/loginStore"; // Zustand 상태관리 import
+import supabase from '../shared/supabase';
+
 
 const queryClient = new QueryClient(); // QueryClient 인스턴스 생성
 
 // 로그인 API 호출
 const signIn = async ({ email, password }) => {
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await SupabaseClient.auth.signInWithPassword({
     email,
     password,
   });

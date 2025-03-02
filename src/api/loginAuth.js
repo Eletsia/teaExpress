@@ -1,6 +1,6 @@
 // loginAuth.js (API 요청) : Supabase 서버와 통신하는 역할
 
-import { supabase } from "./loginSupaClient";
+import supabase from '../shared/supabase';
 
 // 회원가입
 export const signUp = async ({ email, password, nickname }) => {
