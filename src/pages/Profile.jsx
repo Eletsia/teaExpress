@@ -38,8 +38,8 @@ const Profile = () => {
     <>
       <Header />
 
-      <div className="flex min-h-screen w-screen flex-col items-center justify-center p-8">
-        <div className="flex flex-col items-center gap-4 max-md:gap-10 md:flex-row">
+      <div className="flex items-center justify-center p-8 max-sm:p-6">
+        <div className="flex w-full gap-10 max-sm:flex-col">
           <ProfileInfo user={user} />
           <ProfilePosts posts={posts} />
         </div>
