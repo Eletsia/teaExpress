@@ -39,7 +39,7 @@ export const updataUserInfo = async (formData, id) => {
       .from("users")
       .update({
         nickname: formData.nickname,
-        introduction: formData.inroduction,
+        introduction: formData.introduction,
         avatar_img: formData.avatar_img,
       })
       .eq("uid", userId)
