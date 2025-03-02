@@ -1,7 +1,7 @@
 import supabase from "../shared/supabase";
 
 async function uploadFile(file) {
-    const fileName = "public/" + file.name;
+    const fileName = file.name;
     const { data, error } = await supabase.storage
       .from("post_img")
       .upload(fileName, file);
