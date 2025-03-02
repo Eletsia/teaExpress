@@ -62,13 +62,18 @@ const Post = () => {
     },
   });
 
+  // 이미지 관리
   const {
     data: imageUrl,
     isLoading: isImageLoading,
     isError: isImageError,
   } = useQuery({
     queryKey: ["image", post?.[0]?.img_list],
-    queryFn: () => (post?.[0]?.img_list ? loadFile(post[0].img_list) : null),
+    queryFn: () => {
+      const imgPath = post?.[0]?.img_list;
+      if (!imgPath) return null; // 이미지가 없으면 null 반환
+      return imgPath.includes("https") ? imgPath : loadFile(imgPath); // 이미 URL이면 그대로 사용
+    },
   });
 
   if (isPostLoading || isCommentsLoading || isImageLoading) {
@@ -87,6 +92,8 @@ const Post = () => {
     console.error("이미지를 불러오는 중 오류 발생");
   }
 
+
+  //댓글 추가하기
   const commentAddHandler = () => {
     if (!comment.trim()) {
       alert("댓글을 입력해주세요!");
@@ -106,12 +113,14 @@ const Post = () => {
 
   };
 
+  console.log("이미지는:",imageUrl)
+
 
   return (
     <div className="bg-yellow-300 flex flex-row p-4 items-center justify-center gap-6 w-full h-full shadow-lg rounded-lg">
       {/* 왼쪽 */}
       <div className="bg-red-300 flex flex-col items-center gap-4">
-        <img src= {imageUrl.publicUrl}  alt="image" className="w-48 h-auto rounded-lg shadow" />
+        <img src= {imageUrl || ""}  alt="image" className="w-60 h-auto rounded-lg shadow" />
         {/* 로그인한 유저의 게시물이면 게시물 수정하기 버튼 나오게 */}
         {data.user.id === post?.[0]?.uid ? <button onClick={() => navigate(`/posts-modify/${id}`)} className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">
           게시물 수정하기
@@ -131,7 +140,7 @@ const Post = () => {
           <p className="p-2 text-2xl">거리: </p>
         </div>
         <div className="bg-orange-300 p-4">
-          <p className="p-2 text-2xl">{post[0].content || "내용 없음"}</p>
+          <p className="p-2 text-md">{post[0].content || "내용 없음"}</p>
         </div>
         <div className="bg-slate-500 flex flex-col p-4 gap-4">
           <p className="p-2 text-2xl">댓글리스트</p>
