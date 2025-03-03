@@ -11,8 +11,9 @@ export const getUserInfo = async id => {
 
     const { data, error } = await supabase
       .from("users")
-      .select("email,nickname,introduction,avatar_img")
-      .eq("uid", userId);
+      .select("uid,email,nickname,introduction,avatar_img") // uid 추가
+      .eq("uid", userId)
+      .single(); // 한 개의 객체만 반환하도록 변경
 
     if (error) throw error;
 
@@ -46,6 +47,10 @@ export const updataUserInfo = async (formData, id) => {
       .select();
 
     if (error) throw error;
+
+    console.log("업데이트 요청 데이터:", formData); // 확인 완료
+    console.log("업데이트 요청 uid:", userId); // 확인 완료
+    console.log("Supabase 응답:", data, error); // 확인 불가 - null 반환
 
     return data;
   } catch (error) {
