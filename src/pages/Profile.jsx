@@ -13,11 +13,15 @@ const Profile = () => {
   // 유저 정보 가져오기
   useEffect(() => {
     const fetchUser = async () => {
-      const [userInfo] = await getUserInfo(
-        "638c8398-1206-4199-87f9-c4ffb3996fa0",
-      );
+      try {
+        const userId = "638c8398-1206-4199-87f9-c4ffb3996fa0";
 
-      setUser(userInfo);
+        const userInfo = await getUserInfo(userId);
+
+        setUser(userInfo ?? {});
+      } catch (error) {
+        console.error("유저 데이터를 불러오지 못함:", error);
+      }
     };
 
     fetchUser();
@@ -26,9 +30,13 @@ const Profile = () => {
   // 유저 게시물 가져오기
   useEffect(() => {
     const fetchPosts = async () => {
-      const userPosts = await getPostAll();
+      try {
+        const userPosts = await getPostAll();
 
-      setPosts(userPosts || []);
+        setPosts(userPosts ?? []);
+      } catch (error) {
+        console.error("유저 게시물을 불러오지 못함:", error);
+      }
     };
 
     fetchPosts();
