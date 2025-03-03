@@ -45,13 +45,13 @@ const ProfileInfo = ({ user }) => {
   };
 
   return (
-    <div className="flex flex-col gap-6 self-start rounded-md border border-slate-400 p-6 max-sm:w-full max-sm:items-center">
-      <div className="flex w-[180px] items-center justify-center rounded-md border border-slate-400">
+    <div className="flex flex-col gap-6 self-start rounded-md border border-[#728f9e] p-6 max-sm:w-full max-sm:items-center">
+      <div className="flex-center w-[180px] rounded-md border border-[#728f9e]">
         <img src={user?.avatar_img ?? "프로필 이미지"} alt="프로필 이미지" />
       </div>
 
       <div className="flex flex-col gap-6 text-center max-sm:w-full">
-        <div className="rounded-md bg-slate-200 p-3">
+        <div className="rounded-md bg-[#d0ebea] p-3">
           {isEditingProfile ? (
             <input
               type="text"
@@ -67,7 +67,7 @@ const ProfileInfo = ({ user }) => {
             <div>{userData.nickname}</div>
           )}
         </div>
-        <div className="rounded-md bg-slate-200 p-3">
+        <div className="rounded-md bg-[#d0ebea] p-3">
           {isEditingProfile ? (
             <input
               type="text"
@@ -86,10 +86,7 @@ const ProfileInfo = ({ user }) => {
             <div>{userData.introduction}</div>
           )}
         </div>
-        <button
-          onClick={toggleEditButton}
-          className="rounded-md bg-slate-200 p-3"
-        >
+        <button onClick={toggleEditButton}>
           {isEditingProfile ? "프로필 수정 완료" : "프로필 수정"}
         </button>
       </div>

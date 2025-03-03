@@ -46,7 +46,7 @@ const Profile = () => {
     <>
       <Header />
 
-      <div className="flex items-center justify-center p-8 max-sm:p-6">
+      <div className="flex-center bg-[#E0F2F1] p-8 max-sm:p-6">
         <div className="flex w-full gap-10 max-sm:flex-col">
           <ProfileInfo user={user} />
           <ProfilePosts posts={posts} />
