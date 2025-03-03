@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom"; // ✅ Link 임포트 추가
+import { Link } from "react-router-dom";
 import { useLoginAuth } from "../hooks/useLoginAuth";
 
 const LoginForm = ({ type }) => {
@@ -8,7 +8,7 @@ const LoginForm = ({ type }) => {
   const [nickname, setNickname] = useState("");
   const { signInMutation, signUpMutation } = useLoginAuth();
 
-  // in, up 폼 제출 핸들러
+  // 회원가입/로그인 폼 제출 핸들러
   const handleSubmit = e => {
     e.preventDefault();
     if (type === "signup") {
@@ -27,7 +27,7 @@ const LoginForm = ({ type }) => {
         placeholder="Email"
         required
         className="p-2 border rounded"
-        autoComplete="email" // 메일 자동완성 추가
+        autoComplete="email"
       />
       <input
         type="password"
@@ -36,10 +36,10 @@ const LoginForm = ({ type }) => {
         placeholder="Password"
         required
         className="p-2 border rounded"
-        autoComplete={type === "signup" ? "new-password" : "current-password"} // 비밀번호 자동완성 추가
+        autoComplete={type === "signup" ? "new-password" : "current-password"}
       />
       
-      {/* 회원가입 폼일 때만 닉 입력 표시 */}
+      {/* 회원가입 폼일 때만 닉네임 입력 표시 */}
       {type === "signup" && (
         <input
           type="text"
@@ -48,7 +48,7 @@ const LoginForm = ({ type }) => {
           placeholder="Nickname"
           required
           className="p-2 border rounded"
-          autoComplete="username" //  닉 자동완성 추가
+          autoComplete="username"
         />
       )}
 
@@ -59,7 +59,7 @@ const LoginForm = ({ type }) => {
 
       {/* 로그인 페이지에 있을 때만 회원가입 링크 표시 */}
       {type !== "signup" ? (
-        <Link to="/sign-up" className="text-blue-500 text-center">
+        <Link to="/signup" className="text-blue-500 text-center">
           회원가입
         </Link>
       ) : (
