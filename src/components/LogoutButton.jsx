@@ -20,10 +20,7 @@ const LogoutButton = ({ setIsLoggedIn }) => {
   };
 
   return (
-    <button
-      onClick={handleLogout}
-      className="rounded bg-red-500 p-2 text-white"
-    >
+    <button onClick={handleLogout} className="bg-red-500">
       로그아웃
     </button>
   );
