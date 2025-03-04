@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getComments, insertComment } from "../api/commentApi";
 import { loadFile } from "../api/imgApi";
 import { getPostById } from "../api/postApi";
+import { getUserInfo } from "../api/userApi";
 import supabase from "../shared/supabase";
 
 //로그인 상태
@@ -30,7 +31,6 @@ const Post = () => {
     queryFn: () => getPostById(+id),
   });
   
-
   //댓글 정보 가져오기
   const {
     data: comments,
@@ -42,7 +42,17 @@ const Post = () => {
   });
   // const loadedImage = post?.[0]?.img_list ? loadFile(post[0].img_list.publicUrl) : null;
 
-  //유저정보 가져오기
+  // 게시물 올린 유저 정보 가져오기
+  const {
+    data: user,
+    isLoading: isUserLoading,
+    isError: isUserError,
+  } = useQuery({
+    queryKey: ["user", post?.[0]?.uid],
+    queryFn: () => getUserInfo(post?.[0]?.uid),
+  });
+
+  //로그인 유저정보 가져오기
   const getUserId = async () => {
     const { data, error } = await supabase.auth.getUser();
     if (error) {
@@ -76,7 +86,7 @@ const Post = () => {
     },
   });
 
-  if (isPostLoading || isCommentsLoading || isImageLoading) {
+  if (isPostLoading || isCommentsLoading || isImageLoading || isUserLoading) {
     return <div>로딩 중입니다...</div>;
   }
 
@@ -90,6 +100,10 @@ const Post = () => {
 
   if (isImageError) {
     console.error("이미지를 불러오는 중 오류 발생");
+  }
+
+  if (isUserError) {
+    console.error("유저정보를 불러오는 중 오류 발생");
   }
 
 
@@ -113,7 +127,6 @@ const Post = () => {
 
   };
 
-  console.log("이미지는:",imageUrl)
 
 
   return (
@@ -121,6 +134,14 @@ const Post = () => {
       {/* 왼쪽 */}
       <div className="bg-red-300 flex flex-col items-center gap-4">
         <img src= {imageUrl || ""}  alt="image" className="w-60 h-auto rounded-lg shadow" />
+        <p>닉네임: {user[0].nickname}</p>
+        <div className="bg-green-300 flex flex-row justify-between p-4">
+          <p className="p-2 text-md">{post[0].location || "위치 정보 없음"}</p>
+          <p className="p-2 text-md">거리: </p>
+        </div>
+        <div className="bg-orange-300 p-4">
+          <p className="p-2 text-md">{post[0].content || "내용 없음"}</p>
+        </div>
         {/* 로그인한 유저의 게시물이면 게시물 수정하기 버튼 나오게 */}
         {data.user.id === post?.[0]?.uid ? <button onClick={() => navigate(`/posts-modify/${id}`)} className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">
           게시물 수정하기
@@ -135,13 +156,7 @@ const Post = () => {
             <button>북마크</button>
           </div>
         </div>
-        <div className="bg-green-300 flex flex-row justify-between p-4">
-          <p className="p-2 text-2xl">{post[0].location || "위치 정보 없음"}</p>
-          <p className="p-2 text-2xl">거리: </p>
-        </div>
-        <div className="bg-orange-300 p-4">
-          <p className="p-2 text-md">{post[0].content || "내용 없음"}</p>
-        </div>
+        
         <div className="bg-slate-500 flex flex-col p-4 gap-4">
           <p className="p-2 text-2xl">댓글리스트</p>
           <ul>
