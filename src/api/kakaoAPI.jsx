@@ -35,24 +35,35 @@ const useKakaoLoader = () => {
 
   return kakaoLoaded;
 };
+
 export const KakaoMap = ({ posts }) => {
   const kakaoLoaded = useKakaoLoader();
   const [position, setPosition] = useState({ lat: 33.5563, lng: 126.79581 });
+
   if (!kakaoLoaded) {
     return <div>Loading Kakao Map...</div>;
   }
 
   return (
     <>
-      <Map center={position} style={{ width: "100%", height: "360px" }}>
-        <MapMarker
-          position={{
-            lat: 33.5563,
-            lng: 126.79581,
-          }}
-        >
-          <div style={{ color: "#000" }}>qwe</div>
-        </MapMarker>
+      <Map
+        center={position}
+        style={{ width: "100%", height: "360px" }}
+        level={9}
+      >
+        {posts
+          .filter(post => post.lat && post.lng) // lat, lng이 null이 아닌 데이터만 필터링
+          .map(post => (
+            <MapMarker
+              key={post.post_id}
+              position={{
+                lat: parseFloat(post.lat),
+                lng: parseFloat(post.lng),
+              }}
+            >
+              <div style={{ color: "#000" }}>{post.title}</div>
+            </MapMarker>
+          ))}
       </Map>
       <p>
         <em>지도를 클릭해주세요!</em>
