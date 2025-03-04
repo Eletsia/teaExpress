@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Map } from "react-kakao-maps-sdk";
 import { MapMarker } from "react-kakao-maps-sdk";
+
 // useKakaoLoader 훅을 사용하여 Kakao Maps SDK 로드
 const useKakaoLoader = () => {
   const [kakaoLoaded, setKakaoLoaded] = useState(false);
@@ -10,7 +11,9 @@ const useKakaoLoader = () => {
       setKakaoLoaded(true);
       return;
     }
+
     const script = document.createElement("script");
+
     script.type = "text/javascript";
     script.src =
       "https://dapi.kakao.com/v2/maps/sdk.js?appkey=44f25cb020400a3651519041b51ac8e8&libraries=services,clusterer&autoload=false";
@@ -26,19 +29,24 @@ const useKakaoLoader = () => {
     script.onerror = error => {
       console.error("Kakao Maps SDK 로드 실패", error);
     };
+
     document.head.appendChild(script);
   }, []);
+
   return kakaoLoaded;
 };
+
 export const KakaoMap = ({posts}) => {
   const kakaoLoaded = useKakaoLoader();
   const [position, setPosition] = useState({ lat: 33.5563, lng: 126.79581 });
+
 
   if (!kakaoLoaded) {
     return <div>Loading Kakao Map...</div>;
   }
 
   return (
+
     <>
 <Map center={position} style={{ width: "100%", height: "360px" }} level={9}>
   {posts
@@ -49,6 +57,7 @@ export const KakaoMap = ({posts}) => {
         position={{ lat: parseFloat(post.lat), lng: parseFloat(post.lng) }}
       >
         <div style={{ color: "#000" }}>{post.title}</div>
+
       </MapMarker>
     ))}
 </Map>

@@ -7,6 +7,8 @@ import { loadFile } from "../api/imgApi";
 import { deleteLike, getLike, insertLike } from "../api/likeApi";
 import { getPostById } from "../api/postApi";
 import { getUserInfo } from "../api/userApi";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import supabase from "../shared/supabase";
 
 // //로그인 상태
@@ -14,6 +16,7 @@ import supabase from "../shared/supabase";
 //   email: 'qwe123@gmail.com',
 //   password: 'qwe123@gmail.com',
 //   })
+
 
 // 상세페이지-> 게시물 조회,댓글 달기,수정페이지로 이동,상세페이지에 접속한 user uid가져오기
 const Post = () => {
@@ -24,7 +27,6 @@ const Post = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [isBooked, setIsBooked] = useState(false);
 
-
   //게시물 정보 가져오기
   const {
     data: post,
@@ -34,7 +36,7 @@ const Post = () => {
     queryKey: ["post", +id],
     queryFn: () => getPostById(+id),
   });
-  
+
   //댓글 정보 가져오기
   const {
     data: comments,
@@ -65,8 +67,8 @@ const Post = () => {
     }
     return data.user?.id; // 유저의 UID 반환
   };
-  
-  getUserId()
+
+  getUserId();
 
   // 댓글 추가하기
   const mutation = useMutation({
@@ -175,7 +177,6 @@ const Post = () => {
       alert("댓글을 입력해주세요!");
       return;
     }
-    
 
     mutation.mutate({
       // 로그인한 유저 uid
@@ -186,14 +187,12 @@ const Post = () => {
       },
     });
     setComment("");
-
   };
 
   //좋아요 ON,OFF
   const likeToggleButton = () => {
     setIsLiked(prevState => !prevState);
     isLiked ? likeDeleteMutation.mutate({uid: data.user?.id,id:id}) : likeInsertMutation.mutate({uid: data.user?.id,id:id})
-    // console.log("uid:",data.user?.id)
   }
 
   const bookMarkToggleButton = () =>{
@@ -201,61 +200,93 @@ const Post = () => {
     isBooked ? bookMarkDeleteMutation.mutate({uid: data.user?.id,id:id}): bookMarkInsertMutation.mutate({uid: data.user?.id,id:id})
   }
 
-
+  
   return (
-    <div className="bg-yellow-300 flex flex-row p-4 items-center justify-center gap-6 w-full h-full shadow-lg rounded-lg">
-      {/* 왼쪽 */}
-      <div className="bg-red-300 flex flex-col items-center gap-4">
-        <img src= {imageUrl || ""}  alt="image" className="w-60 h-auto rounded-lg shadow" />
-        <p>닉네임: {user?.[0]?.nickname}</p>
-        <div className="bg-green-300 flex flex-row justify-between p-4">
-          <p className="p-2 text-md">{post?.[0]?.location || "위치 정보 없음"}</p>
-          <p className="p-2 text-md">거리: </p>
-        </div>
-        <div className="bg-orange-300 p-4">
-          <p className="p-2 text-md">{post?.[0]?.content || "내용 없음"}</p>
-        </div>
-        {/* 로그인한 유저의 게시물이면 게시물 수정하기 버튼 나오게 */}
-        {data.user.id === post?.[0]?.uid ? <button onClick={() => navigate(`/posts-modify/${id}`)} className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">
-          게시물 수정하기
-        </button> : ""}
-      </div>
-      {/* 오른쪽 */}
-      <div className="bg-blue-300 flex flex-col w-1/2">
-        <div className="bg-violet-300 flex flex-row items-center justify-between p-4">
-          <p className="p-2 text-2xl">{post?.[0]?.title || "제목 없음"}</p>
-          <div className="flex gap-2">
-            <button onClick={likeToggleButton}>{isLiked ? "on":"off"} {like.length}</button>
+    <>
+      <Header />
+
+      <div className="flex-center bg-[#E0F2F1] p-8 max-md:p-6">
+        <div className="flex-center w-full gap-10 max-md:flex-col">
+          {/* 유저 정보 */}
+          <div className="flex flex-col gap-10 self-start rounded-md border border-[#728f9e] p-6 max-md:w-full max-md:items-center">
+            {/* 프로필 이미지 */}
+            <div className="flex-center w-[180px]">
+              <img
+                src={imageUrl || "프로필 이미지"}
+                alt="프로필 이미지"
+                className="rounded-md"
+              />
+            </div>
+
+            {/* 유저 개인 정보 */}
+            <div className="flex flex-col gap-6 text-center max-md:w-full">
+              <p className="rounded-md bg-[#d0ebea] p-3">
+                {user?.nickname || "닉네임"}
+              </p>
+              <p className="rounded-md bg-[#d0ebea] p-3">
+                {post[0].location || "위치"}
+              </p>
+            </div>
+
+            {/* 로그인 유저 기준 수정 버튼 */}
+            {data.user.id === post?.[0]?.uid ? (
+              <button onClick={() => navigate(`/posts-modify/${id}`)}>
+                게시물 수정하기
+              </button>
+            ) : (
+              ""
+            )}
+          </div>
+
+          {/* 유저 게시물 상세 페이지  */}
+          <div className="flex flex-1 flex-col gap-6 rounded-md border border-[#728f9e] p-6 font-medium max-md:w-full">
+            <div className="flex items-center justify-between gap-2">
+              {/* 게시물 제목 */}
+              <div className="p-4 text-xl font-bold">
+                {post?.[0]?.title || "제목 없음"}
+              </div>
+
+              {/* 버튼 */}
+              <div className="flex gap-2">
+              <button onClick={likeToggleButton}>{isLiked ? "on":"off"} {like.length}</button>
             <button onClick={bookMarkToggleButton}>{isBooked ? "북마크" : "북마크 off"}</button>
-          </div>
-        </div>
-        
-        <div className="bg-slate-500 flex flex-col p-4 gap-4">
-          <p className="p-2 text-2xl">댓글리스트</p>
-          <ul>
-            {comments?.map(comment => (
-              <li key={comment.comment_id}>{comment.content}</li>
-            ))}
-          </ul>
-          <div className="flex flex-row gap-4">
-            <input
-              type="text"
-              name=""
-              id=""
-              placeholder="댓글을 입력해주세요."
-              onChange={e => setComment(e.target.value)}
-              className="p-2 flex-2 border border-gray-300 rounded-lg w-full "
-            />
-            <button
-              onClick={() => commentAddHandler()}
-              className="bg-blue-500 text-white w-1/6 rounded-lg p-2 hover:bg-blue-600 transition "
-            >
-              추가
-            </button>
+              </div>
+            </div>
+
+            {/* 게시물 소개 */}
+            <div className="rounded-md bg-[#d0ebea] p-4">
+              {post[0].content || "게시물 소개"}
+            </div>
+
+            {/* 게시물 내용 */}
+            <div className="flex flex-col items-start gap-6 rounded-md bg-[#d0ebea] p-4">
+              {/* 댓글 내용*/}
+              <ul className="flex w-full flex-col gap-4">
+                {comments?.map(comment => (
+                  <li key={comment.comment_id}>{comment.content}</li>
+                ))}
+              </ul>
+
+              {/* 댓글 입력창 */}
+              <div className="flex w-full gap-2 max-[380px]:flex-col">
+                <input
+                  type="text"
+                  name=""
+                  id=""
+                  placeholder="댓글을 입력해주세요."
+                  onChange={e => setComment(e.target.value)}
+                  className="flex-1 rounded-md p-2"
+                />
+
+                <button onClick={() => commentAddHandler()}>추가</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <Footer />
+    </>
   );
 };
 

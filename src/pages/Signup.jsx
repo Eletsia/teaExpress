@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // useState 추가
+import { useState } from "react"; // useState 추가
 import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 useNavigate 추가
 import { useLoginAuth } from "../hooks/useLoginAuth"; // 커스텀 훅 가져오기
 
@@ -12,7 +12,7 @@ const Signup = () => {
   const [nickname, setNickname] = useState("");
 
   // 회원가입 버튼 클릭 시 실행되는 함수
-  const handleSignup = async (e) => {
+  const handleSignup = async e => {
     e.preventDefault(); // 기본 이벤트 방지
 
     if (!email || !password || !nickname) {
@@ -36,31 +36,35 @@ const Signup = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 border rounded">
-      <h2 className="text-xl font-bold mb-4">회원가입</h2>
-      <form onSubmit={handleSignup}> {/* handleSignup을 폼 제출 이벤트로 연결 */}
-        <input 
-          type="text" 
-          placeholder="닉네임" 
-          value={nickname} 
-          onChange={(e) => setNickname(e.target.value)} 
-          className="w-full p-2 border rounded mb-2"
+    <div className="flex-center flex-col gap-4 rounded-2xl border border-[#728f9e] p-4">
+      <h2 className="text-2xl font-bold">회원가입</h2>
+      <form
+        onSubmit={handleSignup}
+        className="flex-center w-[280px] flex-col gap-4"
+      >
+        {/* handleSignup을 폼 제출 이벤트로 연결 */}
+        <input
+          type="text"
+          placeholder="닉네임"
+          value={nickname}
+          onChange={e => setNickname(e.target.value)}
+          className="flex-2 w-full rounded-md border border-gray-300 p-2"
         />
-        <input 
-          type="email" 
-          placeholder="이메일" 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)} 
-          className="w-full p-2 border rounded mb-2"
+        <input
+          type="email"
+          placeholder="이메일"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          className="flex-2 w-full rounded-md border border-gray-300 p-2"
         />
-        <input 
-          type="password" 
-          placeholder="비밀번호" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
-          className="w-full p-2 border rounded mb-2"
+        <input
+          type="password"
+          placeholder="비밀번호"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          className="flex-2 w-full rounded-md border border-gray-300 p-2"
         />
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+        <button type="submit" className="button w-full">
           회원가입
         </button>
       </form>
