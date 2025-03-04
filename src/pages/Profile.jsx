@@ -9,7 +9,6 @@ import { loginUseAuth } from "../store/loginStore";
 
 const Profile = () => {
   const [user, setUser] = useState({}); // 유저 정보 상태 관리
-  const [posts, setPosts] = useState([]); // 유저 게시물 상태 관리
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,16 +28,12 @@ const Profile = () => {
 
   return (
     <>
-      <Header />
-
-      <div className="flex-center bg-[#E0F2F1] p-8 max-sm:p-6">
+      <div className="flex-center p-8 max-sm:p-6">
         <div className="flex w-full gap-10 max-sm:flex-col">
           <ProfileInfo user={user} />
           <ProfilePosts />
         </div>
       </div>
-
-      <Footer />
     </>
   );
 };
