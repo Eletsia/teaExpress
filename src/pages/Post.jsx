@@ -5,6 +5,7 @@ import {
   deleteBookMark,
   getBookMark,
   insertBookMark,
+  isBookMarked,
 } from "../api/bookMarkApi";
 import { getComments, insertComment } from "../api/commentApi";
 import { loadFile } from "../api/imgApi";
@@ -19,9 +20,11 @@ const Post = () => {
   const { id } = useParams();
   const [comment, setComment] = useState("");
   const navigate = useNavigate();
-  const [isLiked, setIsLiked] = useState(false);
-  const [isBooked, setIsBooked] = useState(false);
-  const { user } = useLoginAuth(); // 로그인 유저 정보
+  const { user } = useLoginAuth(); //로그인한 유저 정보
+  const likeInit = getLike(user.id, id);
+  const bookInit = isBookMarked(user.id, id);
+  const [isLiked, setIsLiked] = useState(!likeInit);
+  const [isBooked, setIsBooked] = useState(!bookInit);
 
   // 게시물 정보 가져오기
   const {

@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import SignUp from "../pages/Signup";
 import Post from "../pages/Post";
 import ModifyPost from "../pages/ModifyPost";
+import CreatePost from "../pages/CreatePost";
 import Layout from "./Layout";
 import { loginUseAuth } from "../store/loginStore";
 import { useEffect } from "react";
@@ -33,7 +34,7 @@ const Router = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/posts/:id" element={<Post />} />
-          {/* <Route path="/posts-create" element={<CreatePost />} />  */}
+          <Route path="/posts-create/:address" element={<CreatePost />} />
           <Route path="/posts-modify/:id" element={<ModifyPost />} />
           <Route path="/profile" element={<Profile />} />
           {/* <Route path="/results" element={<TestResult />} /> */}
