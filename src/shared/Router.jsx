@@ -24,6 +24,7 @@ const Router = () => {
       authListener?.subscription?.unsubscribe();
     };
   }, [setUser]); // 의존성 배열 확인
+
   return (
     <BrowserRouter>
       <Routes>

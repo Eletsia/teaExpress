@@ -6,22 +6,29 @@ import LogoutButton from "./LogoutButton";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
       const { data } = await supabase.auth.getUser();
       if (data?.user) {
         const userInfo = await getUserInfo(data.user.id);
-        if (userInfo) {
-          setIsLoggedIn(true);
-        }
+        setIsLoggedIn(!!userInfo);
       } else {
         setIsLoggedIn(false);
       }
     };
+
     checkAuth();
-  }, [isLoggedIn]);
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(() => {
+      checkAuth();
+    });
+
+    return () => {
+      authListener?.subscription?.unsubscribe();
+    };
+  }, []);
 
   return (
     <header className="flex items-center justify-between bg-[#80cbc4] p-6">
