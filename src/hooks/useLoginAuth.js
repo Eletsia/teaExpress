@@ -1,8 +1,7 @@
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { loginUseAuth } from "../store/loginStore"; // Zustand 상태관리 import
 import supabase from '../shared/supabase';
 
-const queryClient = new QueryClient(); // QueryClient 인스턴스 생성
 
 // 로그인 API 호출
 const signIn = async ({ email, password }) => {
@@ -29,6 +28,7 @@ const signOut = async () => {
 
 // 로그인 상태 관리 훅 (Zustand와 충돌 없이 사용)
 export const useLoginAuth = () => {
+  const queryClient = useQueryClient();
   const { user, setUser, logout } = loginUseAuth(); // Zustand 상태 가져오기
 
   // 현재 로그인한 유저 정보를 가져오는 쿼리 (로그인 유지)
@@ -41,6 +41,15 @@ export const useLoginAuth = () => {
     onSuccess: user => setUser(user),
     staleTime: 1000 * 60 * 5, // 5분 동안 캐싱 (불필요한 요청 방지)
   });
+
+  // Google 로그인 API 호출
+const signInWithGoogle = async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+  });
+  if (error) throw error;
+  return data;
+};
 
   // 로그인 요청 처리 (useMutation)
   const signInMutation = useMutation({
@@ -74,7 +83,23 @@ export const useLoginAuth = () => {
       console.error("로그아웃 오류 발생:", error);
       alert("로그아웃 중 문제가 발생했습니다.");
     },
+    
   });
 
-  return { user, signInMutation, signUpMutation, logoutMutation };
+    // Google 로그인 요청 처리
+    const googleSignInMutation = useMutation({
+      mutationFn: signInWithGoogle,
+      onSuccess: async () => {
+        const { data, error } = await supabase.auth.getUser(); // 로그인 후 사용자 정보 가져오기
+        if (!error) {
+          setUser(data.user); // Zustand에 상태 업데이트
+        }
+      },
+      onError: (error) => {
+        console.error("Google 로그인 오류:", error);
+        alert("Google 로그인 중 문제가 발생했습니다.");
+      },
+    });
+
+  return { user, signInMutation, signUpMutation, logoutMutation, googleSignInMutation };
 };
