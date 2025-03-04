@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ModifyPost from "../pages/ModifyPost";
 import Post from "../pages/Post";
 import Profile from "../pages/Profile";
+import Home from "../pages/Home";
 
 const Router = () => {
   return (
