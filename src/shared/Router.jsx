@@ -2,9 +2,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import Profile from "../pages/Profile";
 import Login from "../pages/Login";
-import { loginUseAuth } from "../store/loginStore";
-import supabase from './supabase';
-import { useEffect } from 'react';
+import SignUp from "../pages/Signup";
+import Post from "../pages/Post";
 import ModifyPost from "../pages/ModifyPost";
 import Post from "../pages/Post";
 import Layout from "./Layout";
@@ -25,7 +24,7 @@ const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<Layout />}>
+    
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
@@ -34,7 +33,7 @@ const Router = () => {
           <Route path="/posts-modify/:id" element={<ModifyPost />} />
           <Route path="/profile" element={<Profile />} />
           {/* <Route path="/results" element={<TestResult />} /> */}
-        </Route>
+     
       </Routes>
     </BrowserRouter>
   );
