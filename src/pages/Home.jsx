@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
+  const [address, setAddress] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,6 +22,16 @@ const Home = () => {
   const handlePostClick = id => {
     navigate(`/posts/${id}`);
   };
+  const handleCreateButton = () => {
+    if (!address) {
+      alert("포스트를 게시할 곳을 선택해주세요!");
+      return;
+    }
+    navigate(`posts-create/${address}`);
+  };
+  const handleAddressChange = newAddress => {
+    setAddress(newAddress);
+  };
 
   return (
     <div className="flex-center flex-row gap-8 p-4 max-lg:flex-col-reverse max-sm:p-0">
@@ -28,7 +39,7 @@ const Home = () => {
       <div className="flex flex-col gap-4 rounded-lg border border-[#728f9e] p-6">
         {/* 게시물 추가 버튼 */}
         <div className="flex self-end">
-          <button>게시물 추가하기</button>
+          <button onClick={handleCreateButton}>게시물 추가하기</button>
         </div>
 
         {/* 게시물 */}
@@ -58,7 +69,7 @@ const Home = () => {
 
       {/* 카카오 지도 */}
       <div className="flex flex-col gap-4 self-start max-lg:self-center">
-        <KakaoMap posts={posts} />
+        <KakaoMap posts={posts} onAddressChange={handleAddressChange} />
       </div>
     </div>
   );

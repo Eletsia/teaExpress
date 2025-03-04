@@ -25,10 +25,6 @@ const Post = () => {
   const bookInit = isBookMarked(user.id, id);
   const [isLiked, setIsLiked] = useState(!likeInit);
   const [isBooked, setIsBooked] = useState(!bookInit);
-  //게시물 정보 가져오기
-  const [isLiked, setIsLiked] = useState(false);
-  const [isBooked, setIsBooked] = useState(false);
-  const { user } = useLoginAuth(); // 로그인 유저 정보
 
   // 게시물 정보 가져오기
   const {

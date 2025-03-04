@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import { Map } from "react-kakao-maps-sdk";
-import { MapMarker } from "react-kakao-maps-sdk";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
 
-// useKakaoLoader 훅을 사용하여 Kakao Maps SDK 로드
 const useKakaoLoader = () => {
   const [kakaoLoaded, setKakaoLoaded] = useState(false);
 
@@ -13,22 +11,13 @@ const useKakaoLoader = () => {
     }
 
     const script = document.createElement("script");
-
-    script.type = "text/javascript";
     script.src =
-      "https://dapi.kakao.com/v2/maps/sdk.js?appkey=44f25cb020400a3651519041b51ac8e8&libraries=services,clusterer&autoload=false";
+      "https://dapi.kakao.com/v2/maps/sdk.js?appkey=44f25cb020400a3651519041b51ac8e8&libraries=services&autoload=false";
     script.async = true;
-
-    // SDK 로드 성공했을 때
     script.onload = () => {
-      setKakaoLoaded(true);
-      console.log("Kakao Maps SDK 로드 완료");
+      window.kakao.maps.load(() => setKakaoLoaded(true));
     };
-
-    // SDK 로드 실패했을 때
-    script.onerror = error => {
-      console.error("Kakao Maps SDK 로드 실패", error);
-    };
+    script.onerror = () => console.error("Kakao Maps SDK 로드 실패");
 
     document.head.appendChild(script);
   }, []);
@@ -36,9 +25,31 @@ const useKakaoLoader = () => {
   return kakaoLoaded;
 };
 
-export const KakaoMap = ({ posts }) => {
+export const KakaoMap = ({ posts, onAddressChange }) => {
   const kakaoLoaded = useKakaoLoader();
-  const [position, setPosition] = useState({ lat: 33.5563, lng: 126.79581 });
+  const [position, setPosition] = useState({
+    lat: 33.5563,
+    lng: 126.79581,
+  });
+  const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    if (!kakaoLoaded || !window.kakao) return;
+
+    const geocoder = new window.kakao.maps.services.Geocoder();
+    geocoder.coord2Address(position.lng, position.lat, (result, status) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        const newAddress =
+          result[0]?.road_address?.address_name ||
+          result[0]?.address?.address_name ||
+          "주소 정보를 찾을 수 없음";
+        setAddress(newAddress);
+        if (onAddressChange) {
+          onAddressChange(newAddress);
+        }
+      }
+    });
+  }, [position, kakaoLoaded, onAddressChange]);
 
   if (!kakaoLoaded) {
     return <div>Loading Kakao Map...</div>;
@@ -46,14 +57,21 @@ export const KakaoMap = ({ posts }) => {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* 카카오 지도 */}
       <Map
         center={position}
         className="h-[300px] w-[500px] max-sm:w-full"
-        level={9}
+        level={3}
+        onClick={(_, mouseEvent) => {
+          const latlng = mouseEvent.latLng;
+          setPosition({ lat: latlng.getLat(), lng: latlng.getLng() });
+        }}
+        onDragEnd={map => {
+          const center = map.getCenter();
+          setPosition({ lat: center.getLat(), lng: center.getLng() });
+        }}
       >
         {posts
-          .filter(post => post.lat && post.lng) // lat, lng이 null이 아닌 데이터만 필터링
+          .filter(post => post.lat && post.lng)
           .map(post => (
             <MapMarker
               key={post.post_id}
@@ -65,15 +83,13 @@ export const KakaoMap = ({ posts }) => {
               <div style={{ color: "#000" }}>{post.title}</div>
             </MapMarker>
           ))}
+        <MapMarker position={position}>
+          <div style={{ color: "#000" }}>{address}</div>
+        </MapMarker>
       </Map>
-
-      {/* 설명 */}
       <div className="flex flex-col gap-2">
-        <p>지도를 클릭해주세요!</p>
-
-        <div id="clickLatlng">
-          {position && `위치 : 위도 "${position.lat}" / 경도 "${position.lng}"`}
-        </div>
+        <p>지도를 클릭하거나 이동하여 주소를 확인하세요.</p>
+        <div>현재 위치 주소: {address}</div>
       </div>
     </div>
   );
