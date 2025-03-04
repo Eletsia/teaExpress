@@ -51,11 +51,13 @@ const ProfilePosts = () => {
         <Link
           to={`/posts/${postItem.post_id}`}
           key={postItem.post_id}
-          className="flex cursor-pointer flex-col items-center justify-between gap-10 rounded-2xl border border-[#728f9e] p-4 text-left"
+          className="flex cursor-pointer flex-col gap-6 rounded-2xl border border-[#728f9e] p-4"
         >
-          <img src={postItem.img_list} alt="이미지" />
-          <div className="w-full bg-slate-200 p-2">
+          <div className="w-full rounded-md bg-[#e5e5e5] p-2 font-semibold">
             title : {postItem.title}
+          </div>
+          <div className="flex-center">
+            <img src={postItem.img_list} alt="이미지" />
           </div>
         </Link>
       );
@@ -63,15 +65,20 @@ const ProfilePosts = () => {
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-6 rounded-md border border-[#728f9e] p-6 font-medium">
-      {/* 버튼 */}
-      <div className="flex gap-2 self-end">
-        <button onClick={setMyPosts}>내 게시물</button>
-        <button onClick={setMyBookMark}>북마크</button>
-      </div>
-      {/* 반응형 게시물 그리드 */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-10 max-sm:grid-cols-[repeat(auto-fit,minmax(180px,1fr))]">
-        {userTestPosts()}
+    <div className="w-full">
+      <div className="flex flex-col justify-between gap-6 rounded-md border border-[#728f9e] p-6">
+        {/* 버튼 */}
+        <div className="flex gap-2 self-end">
+          <button onClick={setMyPosts}>내 게시물</button>
+          <button onClick={setMyBookMark}>북마크</button>
+        </div>
+
+        {/* 게시물 */}
+        <div>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-10 max-sm:grid-cols-[repeat(auto-fit,minmax(180px,1fr))]">
+            {userTestPosts()}
+          </div>
+        </div>
       </div>
     </div>
   );
