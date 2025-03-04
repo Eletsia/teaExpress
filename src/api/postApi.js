@@ -27,22 +27,22 @@ export const getPostById = async id => {
 //해당 유저의 포스트를 전부 가져옵니다
 //@return 해당 유저가 작성한 post정보
 //실패시 null
-export const getPostByUserId = async(uid) => {
-  try{
+export const getPostByUserId = async uid => {
+  try {
     const userId = uid;
     const { data, error } = await supabase
       .from("posts")
-      .select("title,content,img_list,location,lat,lng,created_at,uid")
+      .select("*")
       .eq("uid", userId);
 
     if (error) throw error;
     return data;
-  }catch (error) {
+  } catch (error) {
     console.error("유저 id 기반 포스트 가져오기 오류", error);
 
     return null;
   }
-}
+};
 
 // 현재 저장된 전체 포스트 정보를 가져옵니다.
 // @return posts 테이블의 저장된 포스트 데이터 전체가 담긴 object배열
