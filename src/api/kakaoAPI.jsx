@@ -46,11 +46,7 @@ export const KakaoMap = ({ posts }) => {
 
   return (
     <>
-      <Map
-        center={position}
-        style={{ width: "100%", height: "360px" }}
-        level={9}
-      >
+      <Map center={position} style={{ width: "100%", height: "80%" }} level={9}>
         {posts
           .filter(post => post.lat && post.lng) // lat, lng이 null이 아닌 데이터만 필터링
           .map(post => (

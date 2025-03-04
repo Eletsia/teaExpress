@@ -5,14 +5,13 @@ import {
   deleteBookMark,
   getBookMark,
   insertBookMark,
+  isBookMarked,
 } from "../api/bookMarkApi";
 import { getComments, insertComment } from "../api/commentApi";
 import { loadFile } from "../api/imgApi";
 import { deleteLike, getLike, insertLike } from "../api/likeApi";
 import { getPostById } from "../api/postApi";
 import { getUserInfo } from "../api/userApi";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import { useLoginAuth } from "../hooks/useLoginAuth";
 
 // 상세페이지-> 게시물 조회,댓글 달기,수정페이지로 이동,상세페이지에 접속한 user uid가져오기
@@ -21,10 +20,11 @@ const Post = () => {
   const { id } = useParams();
   const [comment, setComment] = useState("");
   const navigate = useNavigate();
-  const [isLiked, setIsLiked] = useState(false);
-  const [isBooked, setIsBooked] = useState(false);
   const { user } = useLoginAuth(); //로그인한 유저 정보
-
+  const likeInit = getLike(user.id, id);
+  const bookInit = isBookMarked(user.id, id);
+  const [isLiked, setIsLiked] = useState(!likeInit);
+  const [isBooked, setIsBooked] = useState(!bookInit);
   //게시물 정보 가져오기
   const {
     data: post,
@@ -244,7 +244,7 @@ const Post = () => {
                   {isLiked ? "on" : "off"} {like.length}
                 </button>
                 <button onClick={bookMarkToggleButton}>
-                  {isBooked ? "북마크" : "북마크 off"}
+                  {isBooked ? "북마크 지우기" : "북마크 하기"}
                 </button>
               </div>
             </div>

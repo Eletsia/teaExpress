@@ -36,6 +36,25 @@ export const getBookMark = async uid => {
     return null;
   }
 };
+
+export const isBookMarked = async (uid, post_id) => {
+  try {
+    const userId = uid;
+    if (!userId) throw new Error("잘못된 유저 정보입니다.");
+
+    const { data, error } = await supabase
+      .from("bookmark")
+      .select("*")
+      .eq("uid", uid)
+      .eq("post_id", post_id);
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("북마크 가져오기 오류", error);
+    return null;
+  }
+};
 //@param uid 유저의 uid값
 //@param id post_id값
 //데이터베이스에 북마크 데이터를 추가합니다
