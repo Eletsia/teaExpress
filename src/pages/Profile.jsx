@@ -25,16 +25,12 @@ const Profile = () => {
   }, []);
 
   return (
-    <>
-      <div className="flex-center">
-        <div className="flex-center p-8 max-sm:p-6">
-          <div className="flex w-full gap-10 max-sm:flex-col">
-            <ProfileInfo user={user} />
-            <ProfilePosts />
-          </div>
-        </div>
+    <div className="w-full">
+      <div className="flex gap-10 max-sm:flex-col">
+        <ProfileInfo user={user} />
+        <ProfilePosts />
       </div>
-    </>
+    </div>
   );
 };
 
