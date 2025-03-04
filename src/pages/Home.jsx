@@ -1,16 +1,12 @@
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import { KakaoMap } from "../api/kakaoAPI";
-
 
 const Home = () => {
   return (
-    <div className="flex h-screen w-screen flex-col">
-      <Header />
-      <div className="flex-center flex-1 bg-[#E0F2F1]">
+    <div className="flex items-center justify-between gap-10 bg-red-100">
+      <div className="flex-center flex-1 bg-red-400 p-2">추천 영역</div>
+      <div className="h-[400px] w-[600px]">
         <KakaoMap />
       </div>
-      <Footer />
     </div>
   );
 };
