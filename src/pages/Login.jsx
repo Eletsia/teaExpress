@@ -22,7 +22,7 @@ const Login = () => {
     try {
       await signInMutation.mutateAsync({ email, password }); // 로그인 요청 실행
       alert("로그인 성공! 메인 페이지로 이동합니다.");
-      navigate("/"); // 로그인 성공 후 메인 페이지(`/`)로 이동
+      navigate("/"); // 로그인 성공 후 메인 페이지("/")로 이동
     } catch (error) {
       console.error("로그인 실패:", error);
       alert("로그인 실패! 다시 시도해주세요.");
@@ -30,11 +30,11 @@ const Login = () => {
   };
 
   return (
-    <div className="flex-center flex-col gap-4 rounded-2xl border border-[#728f9e] p-4">
+    <div className="flex-center flex-col gap-6 rounded-2xl border border-[#728f9e] p-6 max-sm:p-4">
       <h2 className="text-2xl font-bold">로그인</h2>
       <form
         onSubmit={handleLogin}
-        className="flex-center w-[280px] flex-col gap-4"
+        className="flex-center w-[280px] flex-col gap-6"
       >
         {/*  handleLogin을 폼 제출 이벤트로 연결 */}
         <input
@@ -53,11 +53,9 @@ const Login = () => {
         />
         <button type="submit" className="button w-full">
           로그인
-        </button>       
-      </form>
-      <div className="mt-4">
+        </button>
         <GoogleLoginButton />
-      </div>
+      </form>
     </div>
   );
 };

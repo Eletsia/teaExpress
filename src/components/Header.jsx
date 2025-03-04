@@ -32,7 +32,10 @@ const Header = () => {
 
   return (
     <header className="flex items-center justify-between bg-[#80cbc4] p-6">
-      <h1 className="text-xl font-bold" onClick={() => navigate("/")}>
+      <h1
+        className="cursor-pointer text-xl font-bold"
+        onClick={() => navigate("/")}
+      >
         Tea Express
       </h1>
       <div className="flex gap-2">

@@ -9,7 +9,10 @@ const GoogleLoginButton = () => {
   };
 
   return (
-    <button onClick={handleGoogleLogin} className="bg-gray-700 text-white p-2 rounded">
+    <button
+      onClick={handleGoogleLogin}
+      className="w-full rounded-md bg-gray-700"
+    >
       Google 로그인
     </button>
   );
