@@ -1,12 +1,13 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
-// import Profile from "../pages/Profile";
+import Profile from "../pages/Profile";
 import Login from "../pages/Login";
-import Signup from '../pages/Signup';
 import { loginUseAuth } from "../store/loginStore";
 import supabase from './supabase';
 import { useEffect } from 'react';
-
+import ModifyPost from "../pages/ModifyPost";
+import Post from "../pages/Post";
+import Layout from "./Layout";
 
 
 const Router = () => {
@@ -24,16 +25,16 @@ const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        {/* <Route path="/login" element={<Login />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/posts" element={<Post />} />
-        <Route path="/posts-create" element={<CreatePost />} />
-        <Route path="/posts-modify" element={<ModifyPost />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/results" element={<TestResult />} />  */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/posts/:id" element={<Post />} />
+          {/* <Route path="/posts-create" element={<CreatePost />} />  */}
+          <Route path="/posts-modify/:id" element={<ModifyPost />} />
+          <Route path="/profile" element={<Profile />} />
+          {/* <Route path="/results" element={<TestResult />} /> */}
+        </Route>
       </Routes>
     </BrowserRouter>
   );
