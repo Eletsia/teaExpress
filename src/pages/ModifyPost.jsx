@@ -14,6 +14,7 @@ const ModifyPost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
+  const [preImage, setPreImage] = useState("");
   const queryClient = useQueryClient();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -52,11 +53,12 @@ const ModifyPost = () => {
   if (isError) {
     return <div>데이터 조회 중 오류가 발생했습니다.</div>;
   }
-
+  
+  
   // 게시물 등록 핸들러
   const onSubmitHandler = async e => {
     e.preventDefault();
-
+    
     let updatedImage = currentImage; // 기존 이미지 유지
 
     if (image) {
@@ -79,6 +81,19 @@ const ModifyPost = () => {
     });
   };
 
+  //이미지 미리보기
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0])
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreImage(reader.result); // 이미지 미리 보기
+      };
+      reader.readAsDataURL(file); // 파일을 data URL로 읽기
+    }
+  };
+
 
   return (
     <form
@@ -89,17 +104,24 @@ const ModifyPost = () => {
       <div>현재 파라미터는 {id} 입니다.</div>
       <div className="flex gap-6 w-full">
         <div className="flex flex-col items-center gap-4">
-          {currentImage && (
+          {/* {currentImage && (
             <img
-              src={currentImage}
+              src={image || currentImage}
               alt="preview"
               className="w-48 h-auto rounded-lg shadow"
             />
-          )}
+          )} */}
+          
+            <img
+              src={preImage || currentImage}
+              alt="preview"
+              className="w-48 h-auto rounded-lg shadow"
+            />
+          
           <input
             type="file"
             accept="image/*"
-            onChange={e => setImage(e.target.files[0])}
+            onChange={handleImageChange}
           />
         </div>
 
