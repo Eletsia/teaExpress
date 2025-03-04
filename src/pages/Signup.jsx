@@ -12,8 +12,8 @@ const Signup = () => {
   const [nickname, setNickname] = useState("");
 
   // 회원가입 버튼 클릭 시 실행되는 함수
-  const handleSignup = async e => {
-    e.preventDefault(); // 기본 이벤트 방지
+  const handleSignup = async (e) => {
+    e.preventDefault(); // 기본 이벤트 방지 
 
     if (!email || !password || !nickname) {
       alert("모든 필드를 입력해주세요!");

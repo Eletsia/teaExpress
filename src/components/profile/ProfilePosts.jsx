@@ -21,10 +21,10 @@ const ProfilePosts = () => {
 
     fetchPosts();
   }, []);
-
   const setMyPosts = async () => {
     try {
       const userPosts = await getPostByUserId(user.id);
+      console.log(user);
       setPosts(userPosts);
     } catch (error) {
       console.error("내 게시물 불러오기 오류 : ", error);

@@ -3,12 +3,28 @@ import Home from "../pages/Home";
 import Profile from "../pages/Profile";
 import Login from "../pages/Login";
 import SignUp from "../pages/Signup";
-import ModifyPost from "../pages/ModifyPost";
 import Post from "../pages/Post";
+import ModifyPost from "../pages/ModifyPost";
 import Layout from "./Layout";
-
+import { loginUseAuth } from "../store/loginStore";
+import { useEffect } from "react";
+import supabase from "./supabase";
 
 const Router = () => {
+  const { setUser } = loginUseAuth();
+
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user || null);
+      },
+    );
+
+    return () => {
+      authListener?.subscription?.unsubscribe();
+    };
+  }, [setUser]); // 의존성 배열 확인
+
   return (
     <BrowserRouter>
       <Routes>

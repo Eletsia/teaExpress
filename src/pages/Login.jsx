@@ -1,6 +1,7 @@
 import { useState } from "react"; // useState 추가
 import { useNavigate } from "react-router-dom"; // 페이지 이동을 위한 useNavigate 추가
 import { useLoginAuth } from "../hooks/useLoginAuth"; // Custom Hook 가져오기
+import GoogleLoginButton from "../components/GoogleLoginButton";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -52,8 +53,11 @@ const Login = () => {
         />
         <button type="submit" className="button w-full">
           로그인
-        </button>
+        </button>       
       </form>
+      <div className="mt-4">
+        <GoogleLoginButton />
+      </div>
     </div>
   );
 };
