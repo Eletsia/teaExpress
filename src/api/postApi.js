@@ -36,6 +36,7 @@ export const getPostByUserId = async(uid) => {
       .eq("uid", userId);
 
     if (error) throw error;
+    return data;
   }catch (error) {
     console.error("유저 id 기반 포스트 가져오기 오류", error);
 
