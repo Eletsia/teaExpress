@@ -19,13 +19,13 @@ const useKakaoLoader = () => {
       "https://dapi.kakao.com/v2/maps/sdk.js?appkey=44f25cb020400a3651519041b51ac8e8&libraries=services,clusterer&autoload=false";
     script.async = true;
 
-    //SDK 로드하면 실행
+    // SDK 로드 성공했을 때
     script.onload = () => {
       setKakaoLoaded(true);
       console.log("Kakao Maps SDK 로드 완료");
     };
 
-    //SDK 로드 실패했을 때
+    // SDK 로드 실패했을 때
     script.onerror = error => {
       console.error("Kakao Maps SDK 로드 실패", error);
     };
@@ -45,10 +45,11 @@ export const KakaoMap = ({ posts }) => {
   }
 
   return (
-    <>
+    <div className="flex flex-col gap-6">
+      {/* 카카오 지도 */}
       <Map
         center={position}
-        style={{ width: "100%", height: "360px" }}
+        className="h-[300px] w-[500px] max-sm:w-full"
         level={9}
       >
         {posts
@@ -65,13 +66,15 @@ export const KakaoMap = ({ posts }) => {
             </MapMarker>
           ))}
       </Map>
-      <p>
-        <em>지도를 클릭해주세요!</em>
-      </p>
-      <div id="clickLatlng">
-        {position &&
-          `클릭한 위치의 위도는 ${position.lat} 이고, 경도는 ${position.lng} 입니다`}
+
+      {/* 설명 */}
+      <div className="flex flex-col gap-2">
+        <p>지도를 클릭해주세요!</p>
+
+        <div id="clickLatlng">
+          {position && `위치 : 위도 "${position.lat}" / 경도 "${position.lng}"`}
+        </div>
       </div>
-    </>
+    </div>
   );
 };

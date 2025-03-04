@@ -2,8 +2,6 @@ import { KakaoMap } from "../api/kakaoAPI";
 import { getPostAll } from "../api/postApi";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -25,28 +23,30 @@ const Home = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen flex-col">
-      <div className="flex flex-1 bg-[#E0F2F1]">
-        <div className="flex-1">
-          <KakaoMap posts={posts} />
+    <div className="flex-center flex-row gap-8 p-4 max-lg:flex-col-reverse max-sm:p-0">
+      {/* 추천순 게시물 */}
+      <div className="flex flex-col gap-4 rounded-lg border border-[#728f9e] p-6">
+        {/* 게시물 추가 버튼 */}
+        <div className="flex self-end">
+          <button>게시물 추가하기</button>
         </div>
-        <div className="flex-1 overflow-y-auto p-4">
+
+        {/* 게시물 */}
+        <div>
           {posts && posts.length > 0 ? (
-            <div>
+            <div className="flex w-full flex-col gap-4">
               {posts.map(post => (
                 <div
                   key={post.post_id}
-                  className="mb-4 rounded-md bg-white p-4 shadow-md"
+                  className="flex flex-col gap-2 rounded-md bg-white p-4 text-sm shadow-md"
                   onClick={() => handlePostClick(post.post_id)}
                 >
-                  <h3 className="text-xl font-semibold">{post.title}</h3>
-                  <p className="text-gray-600">{post.content}</p>
-                  <p className="mt-2 text-sm text-gray-500">
-                    위치: {post.location}, {post.lat}, {post.lng}
+                  <h3 className="font-bold">{post.title}</h3>
+                  {/* <p>{post.content}</p> */}
+                  <p>
+                    위치 : {post.location}, {post.lat}, {post.lng}
                   </p>
-                  <p className="mt-1 text-sm text-gray-500">
-                    작성일: {new Date(post.created_at).toLocaleDateString()}
-                  </p>
+                  {/* <p>작성일 : {new Date(post.created_at).toLocaleDateString()}</p> */}
                 </div>
               ))}
             </div>
@@ -54,6 +54,11 @@ const Home = () => {
             <p>게시물이 없습니다.</p>
           )}
         </div>
+      </div>
+
+      {/* 카카오 지도 */}
+      <div className="flex flex-col gap-4 self-start max-lg:self-center">
+        <KakaoMap posts={posts} />
       </div>
     </div>
   );
