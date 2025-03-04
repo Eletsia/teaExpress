@@ -29,16 +29,12 @@ const Profile = () => {
 
   return (
     <>
-      <Header />
-
       <div className="flex-center bg-[#E0F2F1] p-8 max-sm:p-6">
         <div className="flex w-full gap-10 max-sm:flex-col">
           <ProfileInfo user={user} />
           <ProfilePosts />
         </div>
       </div>
-
-      <Footer />
     </>
   );
 };

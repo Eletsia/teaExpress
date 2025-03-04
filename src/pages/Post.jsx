@@ -1,7 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteBookMark, getBookMark, insertBookMark } from "../api/bookMarkApi";
+import {
+  deleteBookMark,
+  getBookMark,
+  insertBookMark,
+} from "../api/bookMarkApi";
 import { getComments, insertComment } from "../api/commentApi";
 import { loadFile } from "../api/imgApi";
 import { deleteLike, getLike, insertLike } from "../api/likeApi";
@@ -79,14 +83,14 @@ const Post = () => {
 
   //좋아요 추가
   const likeInsertMutation = useMutation({
-    mutationFn: ({uid, id}) => insertLike(uid, id),
+    mutationFn: ({ uid, id }) => insertLike(uid, id),
     onSuccess: () => {
       queryClient.invalidateQueries(["like"]);
     },
   });
   //좋아요 삭제
   const likeDeleteMutation = useMutation({
-    mutationFn: ({uid, id}) => deleteLike(uid, id),
+    mutationFn: ({ uid, id }) => deleteLike(uid, id),
     onSuccess: () => {
       queryClient.invalidateQueries(["like"]);
     },
@@ -94,14 +98,14 @@ const Post = () => {
 
   //북마크 추가
   const bookMarkInsertMutation = useMutation({
-    mutationFn: ({uid, id}) => insertBookMark(uid, id),
+    mutationFn: ({ uid, id }) => insertBookMark(uid, id),
     onSuccess: () => {
       queryClient.invalidateQueries(["like"]);
     },
   });
   //북마크 삭제
   const bookMarkDeleteMutation = useMutation({
-    mutationFn: ({uid, id}) => deleteBookMark(uid, id),
+    mutationFn: ({ uid, id }) => deleteBookMark(uid, id),
     onSuccess: () => {
       queryClient.invalidateQueries(["like"]);
     },
@@ -127,8 +131,8 @@ const Post = () => {
     isLoading: isLikeLoading,
     isError: isLikeError,
   } = useQuery({
-    queryKey: ["like", data.user?.id,id],
-    queryFn: () => getLike(data.user?.id,id),
+    queryKey: ["like", data.user?.id, id],
+    queryFn: () => getLike(data.user?.id, id),
   });
 
   // 북마크 정보 가져오기
@@ -137,11 +141,18 @@ const Post = () => {
     isLoading: isBookedLoading,
     isError: isBookedError,
   } = useQuery({
-    queryKey: ["bookmarked", data.user?.id,id],
-    queryFn: () => getBookMark(data.user?.id,id),
+    queryKey: ["bookmarked", data.user?.id, id],
+    queryFn: () => getBookMark(data.user?.id, id),
   });
 
-  if (isPostLoading || isCommentsLoading || isImageLoading || isUserLoading || isLikeLoading || isBookedLoading) {
+  if (
+    isPostLoading ||
+    isCommentsLoading ||
+    isImageLoading ||
+    isUserLoading ||
+    isLikeLoading ||
+    isBookedLoading
+  ) {
     return <div>로딩 중입니다...</div>;
   }
 
@@ -169,7 +180,6 @@ const Post = () => {
     console.error("좋아요 정보를 불러오는 중 오류 발생");
   }
 
-
   //댓글 추가하기
   const commentAddHandler = () => {
     if (!comment.trim()) {
@@ -191,15 +201,18 @@ const Post = () => {
   //좋아요 ON,OFF
   const likeToggleButton = () => {
     setIsLiked(prevState => !prevState);
-    isLiked ? likeDeleteMutation.mutate({uid: data.user?.id,id:id}) : likeInsertMutation.mutate({uid: data.user?.id,id:id})
-  }
+    isLiked
+      ? likeDeleteMutation.mutate({ uid: data.user?.id, id: id })
+      : likeInsertMutation.mutate({ uid: data.user?.id, id: id });
+  };
 
-  const bookMarkToggleButton = () =>{
-    setIsBooked(prevState => !prevState)
-    isBooked ? bookMarkDeleteMutation.mutate({uid: data.user?.id,id:id}): bookMarkInsertMutation.mutate({uid: data.user?.id,id:id})
-  }
+  const bookMarkToggleButton = () => {
+    setIsBooked(prevState => !prevState);
+    isBooked
+      ? bookMarkDeleteMutation.mutate({ uid: data.user?.id, id: id })
+      : bookMarkInsertMutation.mutate({ uid: data.user?.id, id: id });
+  };
 
-  
   return (
     <>
       <Header />
@@ -247,8 +260,12 @@ const Post = () => {
 
               {/* 버튼 */}
               <div className="flex gap-2">
-              <button onClick={likeToggleButton}>{isLiked ? "on":"off"} {like.length}</button>
-            <button onClick={bookMarkToggleButton}>{isBooked ? "북마크" : "북마크 off"}</button>
+                <button onClick={likeToggleButton}>
+                  {isLiked ? "on" : "off"} {like.length}
+                </button>
+                <button onClick={bookMarkToggleButton}>
+                  {isBooked ? "북마크" : "북마크 off"}
+                </button>
               </div>
             </div>
 
