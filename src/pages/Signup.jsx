@@ -12,8 +12,8 @@ const Signup = () => {
   const [nickname, setNickname] = useState("");
 
   // 회원가입 버튼 클릭 시 실행되는 함수
-  const handleSignup = async (e) => {
-    e.preventDefault(); // 기본 이벤트 방지 
+  const handleSignup = async e => {
+    e.preventDefault(); // 기본 이벤트 방지
 
     if (!email || !password || !nickname) {
       alert("모든 필드를 입력해주세요!");
@@ -36,11 +36,11 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex-center flex-col gap-4 rounded-2xl border border-[#728f9e] p-4">
+    <div className="flex-center flex-col gap-6 rounded-2xl border border-[#728f9e] p-6 max-sm:p-4">
       <h2 className="text-2xl font-bold">회원가입</h2>
       <form
         onSubmit={handleSignup}
-        className="flex-center w-[280px] flex-col gap-4"
+        className="flex-center w-[280px] flex-col gap-6"
       >
         {/* handleSignup을 폼 제출 이벤트로 연결 */}
         <input
