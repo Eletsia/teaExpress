@@ -9,11 +9,11 @@ import { getPostById } from "../api/postApi";
 import { getUserInfo } from "../api/userApi";
 import supabase from "../shared/supabase";
 
-//로그인 상태
-const { data, error } = await supabase.auth.signInWithPassword({
-  email: 'qwe123@gmail.com',
-  password: 'qwe123@gmail.com',
-  })
+// //로그인 상태
+// const { data, error } = await supabase.auth.signInWithPassword({
+//   email: 'qwe123@gmail.com',
+//   password: 'qwe123@gmail.com',
+//   })
 
 // 상세페이지-> 게시물 조회,댓글 달기,수정페이지로 이동,상세페이지에 접속한 user uid가져오기
 const Post = () => {
