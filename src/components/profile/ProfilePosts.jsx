@@ -4,7 +4,7 @@ import { loginUseAuth } from "../../store/loginStore";
 import { getBookMark } from "../../api/bookMarkApi";
 
 const ProfilePosts = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]); // 유저 게시물 상태 관리
   const { user } = loginUseAuth();
 
   useEffect(() => {
@@ -61,15 +61,13 @@ const ProfilePosts = () => {
 
   return (
     <div className="flex flex-1 flex-col gap-6 rounded-md border border-[#728f9e] p-6 font-medium">
-      {/* 북마크 버튼 */}
-      <button className="flex-center self-end" onClick={setMyPosts}>
-        내 게시물
-      </button>
-      <button className="flex-center self-end" onClick={setMyBookMark}>
-        북마크
-      </button>
+      {/* 버튼 */}
+      <div className="flex gap-2 self-end">
+        <button onClick={setMyPosts}>내 게시물</button>
+        <button onClick={setMyBookMark}>북마크</button>
+      </div>
       {/* 반응형 게시물 그리드 */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-10">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-10 max-sm:grid-cols-[repeat(auto-fit,minmax(180px,1fr))]">
         {userTestPosts()}
       </div>
     </div>
