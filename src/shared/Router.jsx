@@ -7,6 +7,7 @@ import ModifyPost from "../pages/ModifyPost";
 import Post from "../pages/Post";
 import Layout from "./Layout";
 
+
 const Router = () => {
   return (
     <BrowserRouter>

@@ -8,7 +8,7 @@
     color: #263339;
     line-height: 1.5;
   }
-
+  
   .layout {
     display: flex;
     flex-direction: column;
@@ -45,4 +45,3 @@
     align-items: center;
     justify-content: center;
   }
-}

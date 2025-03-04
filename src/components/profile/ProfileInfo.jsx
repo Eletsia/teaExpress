@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { updataUserInfo } from "../../api/userApi";
+import { loginUseAuth } from "../../store/loginStore";
 
 const ProfileInfo = ({ user }) => {
   const [userData, setUserData] = useState({
@@ -31,7 +32,7 @@ const ProfileInfo = ({ user }) => {
   // 업데이트 후 유저 정보 저장 함수
   const handleSaveProfile = async () => {
     try {
-      const userId = "638c8398-1206-4199-87f9-c4ffb3996fa0";
+      const userId = loginUseAuth.getState().user.id;
 
       const updatedUser = await updataUserInfo(userData, userId);
 

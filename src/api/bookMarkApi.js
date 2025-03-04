@@ -12,11 +12,25 @@ export const getBookMark = async uid => {
 
     const { data, error } = await supabase
       .from("bookmark")
-      .select("*")
+      .select("posts(*)")
       .eq("uid", uid);
 
     if (error) throw error;
-    return data;
+
+    const formattedData = data.map(item => {
+      return {
+        post_id: item.posts.id,
+        uid: item.posts.uid,
+        title: item.posts.title,
+        content: item.posts.content,
+        img_list: item.posts.img_list,
+        post_id: item.posts.post_id,
+        lng: item.posts.lng,
+        lag: item.posts.lag,
+      };
+    });
+
+    return formattedData;
   } catch (error) {
     console.error("북마크 가져오기 오류", error);
     return null;
