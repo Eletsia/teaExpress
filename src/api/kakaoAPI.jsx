@@ -13,7 +13,7 @@ const useKakaoLoader = () => {
     const script = document.createElement("script");
     script.type = "text/javascript";
     script.src =
-      "https://dapi.kakao.com/v2/maps/sdk.js?appkey=44f25cb020400a3651519041b51ac8e8&libraries=services,clusterer";
+      "https://dapi.kakao.com/v2/maps/sdk.js?appkey=44f25cb020400a3651519041b51ac8e8&libraries=services,clusterer&autoload=false";
     script.async = true;
     //SDK 로드하면 실행
     script.onload = () => {
