@@ -1,14 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { loadFile, uploadFile } from "../api/imgApi";
 import { getPostById, updatePost } from "../api/postApi";
-import supabase from "../shared/supabase";
+import { useLoginAuth } from "../hooks/useLoginAuth";
 
-const { data, error } = await supabase.auth.signInWithPassword({
-  email: 'red@gmail.com',
-  password: 'red',
-  })
 
 const ModifyPost = () => {
   const [title, setTitle] = useState("");
@@ -18,6 +14,7 @@ const ModifyPost = () => {
   const queryClient = useQueryClient();
   const { id } = useParams();
   const navigate = useNavigate();
+  const {user} = useLoginAuth();
 
   // 게시물 정보 가져오기
   const {
@@ -29,7 +26,6 @@ const ModifyPost = () => {
     queryFn: () => getPostById(+id),
     staleTime: 1000 * 60 * 5,  //5분동안 캐시 유지
   });
-  console.log("post:",post)
 
    // 데이터가 존재할 때만 상태 업데이트
    const currentTitle = title || post?.[0]?.title || "";
@@ -101,17 +97,8 @@ const ModifyPost = () => {
       onSubmit={onSubmitHandler}
     >
       <h3 className="text-2xl font-bold">게시물 수정페이지</h3>
-      <div>현재 파라미터는 {id} 입니다.</div>
       <div className="flex gap-6 w-full">
         <div className="flex flex-col items-center gap-4">
-          {/* {currentImage && (
-            <img
-              src={image || currentImage}
-              alt="preview"
-              className="w-48 h-auto rounded-lg shadow"
-            />
-          )} */}
-          
             <img
               src={preImage || currentImage}
               alt="preview"

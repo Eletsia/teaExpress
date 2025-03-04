@@ -9,13 +9,7 @@ import { getPostById } from "../api/postApi";
 import { getUserInfo } from "../api/userApi";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import supabase from "../shared/supabase";
-
-//로그인 상태
-const { data, error } = await supabase.auth.signInWithPassword({
-  email: "red@gmail.com",
-  password: "red",
-});
+import { useLoginAuth } from "../hooks/useLoginAuth";
 
 // 상세페이지-> 게시물 조회,댓글 달기,수정페이지로 이동,상세페이지에 접속한 user uid가져오기
 const Post = () => {
@@ -25,6 +19,8 @@ const Post = () => {
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
   const [isBooked, setIsBooked] = useState(false);
+  const { user } = useLoginAuth(); //로그인한 유저 정보
+
 
   //게시물 정보 가져오기
   const {
@@ -45,29 +41,16 @@ const Post = () => {
     queryKey: ["comments", id],
     queryFn: () => getComments(id),
   });
-  // const loadedImage = post?.[0]?.img_list ? loadFile(post[0].img_list.publicUrl) : null;
 
   // 게시물 올린 유저 정보 가져오기
   const {
-    data: user,
+    data: users,
     isLoading: isUserLoading,
     isError: isUserError,
   } = useQuery({
-    queryKey: ["user", post?.[0]?.uid],
+    queryKey: ["users", post?.[0]?.uid],
     queryFn: () => getUserInfo(post?.[0]?.uid),
   });
-
-  //로그인 유저정보 가져오기
-  const getUserId = async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error) {
-      console.error("유저 정보를 가져오는 중 오류 발생:", error);
-      return null;
-    }
-    return data.user?.id; // 유저의 UID 반환
-  };
-
-  getUserId();
 
   // 댓글 추가하기
   const mutation = useMutation({
@@ -127,8 +110,8 @@ const Post = () => {
     isLoading: isLikeLoading,
     isError: isLikeError,
   } = useQuery({
-    queryKey: ["like", data.user?.id,id],
-    queryFn: () => getLike(data.user?.id,id),
+    queryKey: ["like", user?.id,id],
+    queryFn: () => getLike(user?.id,id),
   });
 
   // 북마크 정보 가져오기
@@ -137,8 +120,8 @@ const Post = () => {
     isLoading: isBookedLoading,
     isError: isBookedError,
   } = useQuery({
-    queryKey: ["bookmarked", data.user?.id,id],
-    queryFn: () => getBookMark(data.user?.id,id),
+    queryKey: ["bookmarked", user?.id,id],
+    queryFn: () => getBookMark(user?.id,id),
   });
 
   if (isPostLoading || isCommentsLoading || isImageLoading || isUserLoading || isLikeLoading || isBookedLoading) {
@@ -179,7 +162,7 @@ const Post = () => {
 
     mutation.mutate({
       // 로그인한 유저 uid
-      id: data.user.id,
+      id: user.id,
       newData: {
         post_id: +id,
         content: comment,
@@ -191,12 +174,12 @@ const Post = () => {
   //좋아요 ON,OFF
   const likeToggleButton = () => {
     setIsLiked(prevState => !prevState);
-    isLiked ? likeDeleteMutation.mutate({uid: data.user?.id,id:id}) : likeInsertMutation.mutate({uid: data.user?.id,id:id})
+    isLiked ? likeDeleteMutation.mutate({uid:user?.id,id:id}) : likeInsertMutation.mutate({uid:user?.id,id:id})
   }
 
   const bookMarkToggleButton = () =>{
     setIsBooked(prevState => !prevState)
-    isBooked ? bookMarkDeleteMutation.mutate({uid: data.user?.id,id:id}): bookMarkInsertMutation.mutate({uid: data.user?.id,id:id})
+    isBooked ? bookMarkDeleteMutation.mutate({uid:user?.id,id:id}): bookMarkInsertMutation.mutate({uid:user?.id,id:id})
   }
 
   
@@ -220,7 +203,7 @@ const Post = () => {
             {/* 유저 개인 정보 */}
             <div className="flex flex-col gap-6 text-center max-md:w-full">
               <p className="rounded-md bg-[#d0ebea] p-3">
-                {user?.nickname || "닉네임"}
+                {users?.nickname || "닉네임"}
               </p>
               <p className="rounded-md bg-[#d0ebea] p-3">
                 {post[0].location || "위치"}
@@ -228,7 +211,7 @@ const Post = () => {
             </div>
 
             {/* 로그인 유저 기준 수정 버튼 */}
-            {data.user.id === post?.[0]?.uid ? (
+            {user.id === post?.[0]?.uid ? (
               <button onClick={() => navigate(`/posts-modify/${id}`)}>
                 게시물 수정하기
               </button>
