@@ -6,9 +6,9 @@ import { getPostById, updatePost } from "../api/postApi";
 import supabase from "../shared/supabase";
 
 const { data, error } = await supabase.auth.signInWithPassword({
-  email: 'red@gmail.com',
-  password: 'red',
-  })
+  email: "red@gmail.com",
+  password: "red",
+});
 
 const ModifyPost = () => {
   const [title, setTitle] = useState("");
@@ -27,16 +27,16 @@ const ModifyPost = () => {
   } = useQuery({
     queryKey: ["post", id],
     queryFn: () => getPostById(+id),
-    staleTime: 1000 * 60 * 5,  //5분동안 캐시 유지
+    staleTime: 1000 * 60 * 5, // 5분 동안 캐시 유지
   });
-  console.log("post:",post)
+  console.log("post:", post);
 
-   // 데이터가 존재할 때만 상태 업데이트
-   const currentTitle = title || post?.[0]?.title || "";
-   const currentContent = content || post?.[0]?.content || "";
-   const currentImage = post?.[0]?.img_list || null;
+  // 데이터가 존재할 때만 상태 업데이트
+  const currentTitle = title || post?.[0]?.title || "";
+  const currentContent = content || post?.[0]?.content || "";
+  const currentImage = post?.[0]?.img_list || null;
 
-  //게시물 수정
+  // 게시물 수정
   const mutation = useMutation({
     mutationFn: ({ newData, id }) => updatePost(newData, id),
     onSuccess: () => {
@@ -53,21 +53,19 @@ const ModifyPost = () => {
   if (isError) {
     return <div>데이터 조회 중 오류가 발생했습니다.</div>;
   }
-  
-  
+
   // 게시물 등록 핸들러
   const onSubmitHandler = async e => {
     e.preventDefault();
-    
+
     let updatedImage = currentImage; // 기존 이미지 유지
 
     if (image) {
       await uploadFile(image);
       updatedImage = await loadFile(image.name);
     }
-    
 
-    // id 숫자타입으로 변경
+    // id 숫자 타입으로 변경
     mutation.mutate({
       id: +id,
       newData: {
@@ -81,9 +79,9 @@ const ModifyPost = () => {
     });
   };
 
-  //이미지 미리보기
-  const handleImageChange = (e) => {
-    setImage(e.target.files[0])
+  // 이미지 미리보기
+  const handleImageChange = e => {
+    setImage(e.target.files[0]);
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -94,38 +92,25 @@ const ModifyPost = () => {
     }
   };
 
-
   return (
     <form
-      className="flex flex-col p-4 m-4 items-center gap-6 max-w-2xl mx-auto bg-white shadow-lg rounded-lg"
+      className="m-4 mx-auto flex max-w-2xl flex-col items-center gap-6 rounded-lg bg-white p-4 shadow-lg"
       onSubmit={onSubmitHandler}
     >
       <h3 className="text-2xl font-bold">게시물 수정페이지</h3>
       <div>현재 파라미터는 {id} 입니다.</div>
-      <div className="flex gap-6 w-full">
+      <div className="flex w-full gap-6">
         <div className="flex flex-col items-center gap-4">
-          {/* {currentImage && (
-            <img
-              src={image || currentImage}
-              alt="preview"
-              className="w-48 h-auto rounded-lg shadow"
-            />
-          )} */}
-          
-            <img
-              src={preImage || currentImage}
-              alt="preview"
-              className="w-48 h-auto rounded-lg shadow"
-            />
-          
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
+          <img
+            src={preImage || currentImage}
+            alt="preview"
+            className="h-auto w-48 rounded-lg shadow"
           />
+
+          <input type="file" accept="image/*" onChange={handleImageChange} />
         </div>
 
-        <div className="flex flex-col gap-4 w-full">
+        <div className="flex w-full flex-col gap-4">
           <label className="flex flex-col">
             <span className="text-lg font-semibold">제목</span>
             <input
@@ -133,7 +118,7 @@ const ModifyPost = () => {
               value={title}
               placeholder={post[0].title}
               onChange={e => setTitle(e.target.value)}
-              className="p-2 border border-gray-300 rounded-lg focus:outline-blue-500"
+              className="rounded-lg border border-gray-300 p-2 focus:outline-blue-500"
             />
           </label>
           <label className="flex flex-col">
@@ -143,24 +128,24 @@ const ModifyPost = () => {
               value={content}
               placeholder="내용을 입력하세요."
               onChange={e => setContent(e.target.value)}
-              className="p-2 border border-gray-300 rounded-lg focus:outline-blue-500 h-32 resize-none"
+              className="h-32 resize-none rounded-lg border border-gray-300 p-2 focus:outline-blue-500"
             />
           </label>
           <p>{post?.[0]?.location || "위치 정보 없음"}</p>
         </div>
       </div>
 
-      <div className="flex gap-4 mt-4">
+      <div className="mt-4 flex gap-4">
         <button
           type="submit"
-          className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition"
+          className="rounded-lg bg-blue-500 px-6 py-2 text-white transition hover:bg-blue-600"
         >
           수정하기
         </button>
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="bg-gray-400 text-white px-6 py-2 rounded-lg hover:bg-gray-500 transition"
+          className="rounded-lg bg-gray-400 px-6 py-2 text-white transition hover:bg-gray-500"
         >
           뒤로가기
         </button>

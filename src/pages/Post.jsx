@@ -1,7 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { deleteBookMark, getBookMark, insertBookMark } from "../api/bookMarkApi";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  deleteBookMark,
+  getBookMark,
+  insertBookMark,
+} from "../api/bookMarkApi";
 import { getComments, insertComment } from "../api/commentApi";
 import { loadFile } from "../api/imgApi";
 import { deleteLike, getLike, insertLike } from "../api/likeApi";
@@ -9,15 +13,9 @@ import { getPostById } from "../api/postApi";
 import { getUserInfo } from "../api/userApi";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import supabase from "../shared/supabase";
+import { useLoginAuth } from "../hooks/useLoginAuth";
 
-//로그인 상태
-const { data, error } = await supabase.auth.signInWithPassword({
-  email: "red@gmail.com",
-  password: "red",
-});
-
-// 상세페이지-> 게시물 조회,댓글 달기,수정페이지로 이동,상세페이지에 접속한 user uid가져오기
+// 상세페이지 -> 게시물 조회, 댓글 달기, 수정페이지 이동, 상세페이지에 접속한 user의 uid값 가져오기
 const Post = () => {
   const queryClient = useQueryClient();
   const { id } = useParams();
@@ -25,8 +23,9 @@ const Post = () => {
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
   const [isBooked, setIsBooked] = useState(false);
+  const { user } = useLoginAuth(); // 로그인한 유저 정보
 
-  //게시물 정보 가져오기
+  // 게시물 정보 가져오기
   const {
     data: post,
     isLoading: isPostLoading,
@@ -36,7 +35,7 @@ const Post = () => {
     queryFn: () => getPostById(+id),
   });
 
-  //댓글 정보 가져오기
+  // 댓글 정보 가져오기
   const {
     data: comments,
     isLoading: isCommentsLoading,
@@ -45,29 +44,16 @@ const Post = () => {
     queryKey: ["comments", id],
     queryFn: () => getComments(id),
   });
-  // const loadedImage = post?.[0]?.img_list ? loadFile(post[0].img_list.publicUrl) : null;
 
   // 게시물 올린 유저 정보 가져오기
   const {
-    data: user,
+    data: users,
     isLoading: isUserLoading,
     isError: isUserError,
   } = useQuery({
-    queryKey: ["user", post?.[0]?.uid],
+    queryKey: ["users", post?.[0]?.uid],
     queryFn: () => getUserInfo(post?.[0]?.uid),
   });
-
-  //로그인 유저정보 가져오기
-  const getUserId = async () => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error) {
-      console.error("유저 정보를 가져오는 중 오류 발생:", error);
-      return null;
-    }
-    return data.user?.id; // 유저의 UID 반환
-  };
-
-  getUserId();
 
   // 댓글 추가하기
   const mutation = useMutation({
@@ -77,31 +63,33 @@ const Post = () => {
     },
   });
 
-  //좋아요 추가
+  // 좋아요 추가
   const likeInsertMutation = useMutation({
-    mutationFn: ({uid, id}) => insertLike(uid, id),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["like"]);
-    },
-  });
-  //좋아요 삭제
-  const likeDeleteMutation = useMutation({
-    mutationFn: ({uid, id}) => deleteLike(uid, id),
+    mutationFn: ({ uid, id }) => insertLike(uid, id),
     onSuccess: () => {
       queryClient.invalidateQueries(["like"]);
     },
   });
 
-  //북마크 추가
-  const bookMarkInsertMutation = useMutation({
-    mutationFn: ({uid, id}) => insertBookMark(uid, id),
+  // 좋아요 삭제
+  const likeDeleteMutation = useMutation({
+    mutationFn: ({ uid, id }) => deleteLike(uid, id),
     onSuccess: () => {
       queryClient.invalidateQueries(["like"]);
     },
   });
-  //북마크 삭제
+
+  // 북마크 추가
+  const bookMarkInsertMutation = useMutation({
+    mutationFn: ({ uid, id }) => insertBookMark(uid, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["like"]);
+    },
+  });
+
+  // 북마크 삭제
   const bookMarkDeleteMutation = useMutation({
-    mutationFn: ({uid, id}) => deleteBookMark(uid, id),
+    mutationFn: ({ uid, id }) => deleteBookMark(uid, id),
     onSuccess: () => {
       queryClient.invalidateQueries(["like"]);
     },
@@ -127,8 +115,8 @@ const Post = () => {
     isLoading: isLikeLoading,
     isError: isLikeError,
   } = useQuery({
-    queryKey: ["like", data.user?.id,id],
-    queryFn: () => getLike(data.user?.id,id),
+    queryKey: ["like", user?.id, id],
+    queryFn: () => getLike(user?.id, id),
   });
 
   // 북마크 정보 가져오기
@@ -137,11 +125,18 @@ const Post = () => {
     isLoading: isBookedLoading,
     isError: isBookedError,
   } = useQuery({
-    queryKey: ["bookmarked", data.user?.id,id],
-    queryFn: () => getBookMark(data.user?.id,id),
+    queryKey: ["bookmarked", user?.id, id],
+    queryFn: () => getBookMark(user?.id, id),
   });
 
-  if (isPostLoading || isCommentsLoading || isImageLoading || isUserLoading || isLikeLoading || isBookedLoading) {
+  if (
+    isPostLoading ||
+    isCommentsLoading ||
+    isImageLoading ||
+    isUserLoading ||
+    isLikeLoading ||
+    isBookedLoading
+  ) {
     return <div>로딩 중입니다...</div>;
   }
 
@@ -169,8 +164,7 @@ const Post = () => {
     console.error("좋아요 정보를 불러오는 중 오류 발생");
   }
 
-
-  //댓글 추가하기
+  // 댓글 추가하기
   const commentAddHandler = () => {
     if (!comment.trim()) {
       alert("댓글을 입력해주세요!");
@@ -179,7 +173,7 @@ const Post = () => {
 
     mutation.mutate({
       // 로그인한 유저 uid
-      id: data.user.id,
+      id: user.id,
       newData: {
         post_id: +id,
         content: comment,
@@ -188,23 +182,24 @@ const Post = () => {
     setComment("");
   };
 
-  //좋아요 ON,OFF
+  // 좋아요 ON, OFF
   const likeToggleButton = () => {
     setIsLiked(prevState => !prevState);
-    isLiked ? likeDeleteMutation.mutate({uid: data.user?.id,id:id}) : likeInsertMutation.mutate({uid: data.user?.id,id:id})
-  }
+    isLiked
+      ? likeDeleteMutation.mutate({ uid: user?.id, id: id })
+      : likeInsertMutation.mutate({ uid: user?.id, id: id });
+  };
 
-  const bookMarkToggleButton = () =>{
-    setIsBooked(prevState => !prevState)
-    isBooked ? bookMarkDeleteMutation.mutate({uid: data.user?.id,id:id}): bookMarkInsertMutation.mutate({uid: data.user?.id,id:id})
-  }
+  const bookMarkToggleButton = () => {
+    setIsBooked(prevState => !prevState);
+    isBooked
+      ? bookMarkDeleteMutation.mutate({ uid: user?.id, id: id })
+      : bookMarkInsertMutation.mutate({ uid: user?.id, id: id });
+  };
 
-  
   return (
     <>
-      <Header />
-
-      <div className="flex-center bg-[#E0F2F1] p-8 max-md:p-6">
+      <div className="flex-center min-h-[calc(100vh-230px)] max-md:p-6">
         <div className="flex-center w-full gap-10 max-md:flex-col">
           {/* 유저 정보 */}
           <div className="flex flex-col gap-10 self-start rounded-md border border-[#728f9e] p-6 max-md:w-full max-md:items-center">
@@ -220,7 +215,7 @@ const Post = () => {
             {/* 유저 개인 정보 */}
             <div className="flex flex-col gap-6 text-center max-md:w-full">
               <p className="rounded-md bg-[#d0ebea] p-3">
-                {user?.nickname || "닉네임"}
+                {users?.nickname || "닉네임"}
               </p>
               <p className="rounded-md bg-[#d0ebea] p-3">
                 {post[0].location || "위치"}
@@ -228,7 +223,7 @@ const Post = () => {
             </div>
 
             {/* 로그인 유저 기준 수정 버튼 */}
-            {data.user.id === post?.[0]?.uid ? (
+            {user.id === post?.[0]?.uid ? (
               <button onClick={() => navigate(`/posts-modify/${id}`)}>
                 게시물 수정하기
               </button>
@@ -237,54 +232,62 @@ const Post = () => {
             )}
           </div>
 
-          {/* 유저 게시물 상세 페이지  */}
-          <div className="flex flex-1 flex-col gap-6 rounded-md border border-[#728f9e] p-6 font-medium max-md:w-full">
-            <div className="flex items-center justify-between gap-2">
-              {/* 게시물 제목 */}
-              <div className="p-4 text-xl font-bold">
-                {post?.[0]?.title || "제목 없음"}
+          <div className="flex w-full flex-col items-start gap-4">
+            <Link to="/profile" className="button">
+              뒤로가기
+            </Link>
+
+            {/* 유저 게시물 상세 페이지  */}
+            <div className="flex w-full flex-1 flex-col gap-6 rounded-md border border-[#728f9e] p-6 font-medium max-md:w-full">
+              <div className="flex items-center justify-between gap-2">
+                {/* 게시물 제목 */}
+                <div className="p-4 text-xl font-bold">
+                  {post?.[0]?.title || "제목 없음"}
+                </div>
+
+                {/* 버튼 */}
+                <div className="flex gap-2">
+                  <button onClick={likeToggleButton}>
+                    {isLiked ? "on" : "off"} {like.length}
+                  </button>
+                  <button onClick={bookMarkToggleButton}>
+                    {isBooked ? "북마크" : "북마크 off"}
+                  </button>
+                </div>
               </div>
 
-              {/* 버튼 */}
-              <div className="flex gap-2">
-              <button onClick={likeToggleButton}>{isLiked ? "on":"off"} {like.length}</button>
-            <button onClick={bookMarkToggleButton}>{isBooked ? "북마크" : "북마크 off"}</button>
+              {/* 게시물 소개 */}
+              <div className="rounded-md bg-[#d0ebea] p-4">
+                {post[0].content || "게시물 소개"}
               </div>
-            </div>
 
-            {/* 게시물 소개 */}
-            <div className="rounded-md bg-[#d0ebea] p-4">
-              {post[0].content || "게시물 소개"}
-            </div>
+              {/* 게시물 내용 */}
+              <div className="flex flex-col items-start gap-6 rounded-md bg-[#d0ebea] p-4">
+                {/* 댓글 내용*/}
+                <ul className="flex w-full flex-col gap-4">
+                  {comments?.map(comment => (
+                    <li key={comment.comment_id}>{comment.content}</li>
+                  ))}
+                </ul>
 
-            {/* 게시물 내용 */}
-            <div className="flex flex-col items-start gap-6 rounded-md bg-[#d0ebea] p-4">
-              {/* 댓글 내용*/}
-              <ul className="flex w-full flex-col gap-4">
-                {comments?.map(comment => (
-                  <li key={comment.comment_id}>{comment.content}</li>
-                ))}
-              </ul>
+                {/* 댓글 입력창 */}
+                <div className="flex w-full gap-2 max-[380px]:flex-col">
+                  <input
+                    type="text"
+                    name=""
+                    id=""
+                    placeholder="댓글을 입력해주세요."
+                    onChange={e => setComment(e.target.value)}
+                    className="flex-1 rounded-md p-2"
+                  />
 
-              {/* 댓글 입력창 */}
-              <div className="flex w-full gap-2 max-[380px]:flex-col">
-                <input
-                  type="text"
-                  name=""
-                  id=""
-                  placeholder="댓글을 입력해주세요."
-                  onChange={e => setComment(e.target.value)}
-                  className="flex-1 rounded-md p-2"
-                />
-
-                <button onClick={() => commentAddHandler()}>추가</button>
+                  <button onClick={() => commentAddHandler()}>추가</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <Footer />
     </>
   );
 };

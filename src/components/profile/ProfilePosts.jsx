@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getPostByUserId } from "../../api/postApi";
 import { loginUseAuth } from "../../store/loginStore";
 import { getBookMark } from "../../api/bookMarkApi";
+import { Link } from "react-router-dom";
 
 const ProfilePosts = () => {
   const [posts, setPosts] = useState([]); // 유저 게시물 상태 관리
@@ -14,7 +15,7 @@ const ProfilePosts = () => {
         console.log(userPosts);
         setPosts(userPosts ?? []);
       } catch (error) {
-        console.error("유저 게시물을 불러오지 못함:", error);
+        console.error("유저 게시물을 불러오지 못함 : ", error);
       }
     };
 
@@ -26,7 +27,7 @@ const ProfilePosts = () => {
       const userPosts = await getPostByUserId(user.id);
       setPosts(userPosts);
     } catch (error) {
-      console.error("내 게시물 불러오기 오류", error);
+      console.error("내 게시물 불러오기 오류 : ", error);
     }
   };
 
@@ -36,9 +37,10 @@ const ProfilePosts = () => {
       console.log(bookMarkPosts);
       setPosts(bookMarkPosts);
     } catch (error) {
-      console.error("북마크된 게시물 불러오기 오류", error);
+      console.error("북마크된 게시물 불러오기 오류 : ", error);
     }
   };
+
   const userTestPosts = () => {
     if (!posts || posts.length === 0) {
       return <div>게시물이 없습니다.</div>;
@@ -46,15 +48,16 @@ const ProfilePosts = () => {
 
     return posts.map(postItem => {
       return (
-        <div
+        <Link
+          to={`/posts/${postItem.post_id}`}
           key={postItem.post_id}
-          className="flex flex-col items-center justify-between gap-10 rounded-2xl border border-[#728f9e] p-4 text-left"
+          className="flex cursor-pointer flex-col items-center justify-between gap-10 rounded-2xl border border-[#728f9e] p-4 text-left"
         >
           <img src={postItem.img_list} alt="이미지" />
           <div className="w-full bg-slate-200 p-2">
             title : {postItem.title}
           </div>
-        </div>
+        </Link>
       );
     });
   };

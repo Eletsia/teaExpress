@@ -8,22 +8,23 @@
     color: #263339;
     line-height: 1.5;
   }
-  
+
   .layout {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    /* align-items: center; */
+    /* min-height: calc(100vh - 216px); */
   }
 
   .main-content {
-    width: 100%;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /* width: 100%; */
+    /* flex: 1; */
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-content: center; */
     background-color: #f1f1f1;
     padding: 1.5rem;
+    min-height: calc(100vh - 216px);
   }
 
   button,
@@ -45,3 +46,4 @@
     align-items: center;
     justify-content: center;
   }
+}
