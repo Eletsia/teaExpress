@@ -1,9 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
-import Profile from "../pages/Profile";
+// import Profile from "../pages/Profile";
 import Login from "../pages/Login";
-import SignUp from '../pages/Signup';
-import ModifyPost from '../pages/ModifyPost'
+import Signup from '../pages/Signup';
+
 
 
 const Router = () => {
