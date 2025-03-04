@@ -1,17 +1,12 @@
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
- // supabase 클라이언트 불러오기
 import { loginUseAuth } from "../store/loginStore"; // Zustand 상태관리 import
 import supabase from '../shared/supabase';
-
 
 const queryClient = new QueryClient(); // QueryClient 인스턴스 생성
 
 // 로그인 API 호출
 const signIn = async ({ email, password }) => {
-  const { data, error } = await SupabaseClient.auth.signInWithPassword({
-    email,
-    password,
-  });
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password }); // SupabaseClient → supabase 수정
   if (error) throw error;
   return data;
 };
@@ -27,11 +22,16 @@ const signUp = async ({ email, password, nickname }) => {
   return data;
 };
 
-// 로그인 상태 관리 훅
-export const useLoginAuth = () => {
-  const { user, setUser, logout } = loginUseAuth();
+// 로그아웃 API 호출
+const signOut = async () => {
+  await supabase.auth.signOut();
+};
 
-  // 현재 로그인한 유저 정보를 가져오는 쿼리
+// 로그인 상태 관리 훅 (Zustand와 충돌 없이 사용)
+export const useLoginAuth = () => {
+  const { user, setUser, logout } = loginUseAuth(); // Zustand 상태 가져오기
+
+  // 현재 로그인한 유저 정보를 가져오는 쿼리 (로그인 유지)
   useQuery({
     queryKey: ["authUser"],
     queryFn: async () => {
@@ -42,23 +42,39 @@ export const useLoginAuth = () => {
     staleTime: 1000 * 60 * 5, // 5분 동안 캐싱 (불필요한 요청 방지)
   });
 
-  // 로그인 요청 처리
+  // 로그인 요청 처리 (useMutation)
   const signInMutation = useMutation({
     mutationFn: signIn,
     onSuccess: data => {
-      setUser(data.user);
+      setUser(data.user); // Zustand 상태 업데이트
       queryClient.invalidateQueries(["authUser"]); // 로그인 후 유저 정보 갱신
     },
   });
 
-  // 회원가입 요청 처리
+  // 회원가입 요청 처리 (useMutation)
   const signUpMutation = useMutation({
     mutationFn: signUp,
-    onSuccess: data => {
-      setUser(data);
-      queryClient.invalidateQueries(["authUser"]); // 회원가입 후 유저 정보 갱신
+    onSuccess: (data) => {
+      setUser(data.user); // Zustand 상태 업데이트
+    },
+    onError: (error) => {
+      console.error("회원가입 오류 발생:", error);
+      alert("회원가입 중 문제가 발생했습니다.");
     },
   });
 
-  return { user, signInMutation, signUpMutation, logout };
+  // 로그아웃 요청 처리
+  const logoutMutation = useMutation({
+    mutationFn: signOut,
+    onSuccess: () => {
+      logout(); // Zustand에서 user 상태 초기화
+      queryClient.invalidateQueries(["authUser"]); // 로그아웃 후 캐시 삭제
+    },
+    onError: (error) => {
+      console.error("로그아웃 오류 발생:", error);
+      alert("로그아웃 중 문제가 발생했습니다.");
+    },
+  });
+
+  return { user, signInMutation, signUpMutation, logoutMutation };
 };

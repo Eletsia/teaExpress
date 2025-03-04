@@ -8,7 +8,7 @@ export const signUp = async ({ email, password, nickname }) => {
 
   if (error) throw error;
 
-  //  users 테이블에 닉네임 저장 (테이블명 수정)
+  // users 테이블에 닉네임 저장 (테이블명 수정)
   await supabase.from("users").insert([{ id: user.id, email, nickname }]);
 
   return user;
