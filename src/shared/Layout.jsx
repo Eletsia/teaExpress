@@ -4,13 +4,13 @@ import Footer from "../components/Footer";
 
 const Layout = () => {
   return (
-    <>
+    <div className="layout">
       <Header />
-      <main>
+      <main className="main-content">
         <Outlet /> {/* 여기에 라우트마다 바뀌는 컴포넌트가 들어감 */}
       </main>
       <Footer />
-    </>
+    </div>
   );
 };
 

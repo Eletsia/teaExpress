@@ -9,9 +9,24 @@
     line-height: 1.5;
   }
 
+  .layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .main-content {
+    flex: 1;
+    width: 100%;
+    min-height: calc(100vh - 216px);
+    background-color: #e0f2f1;
+    padding: 1.5rem;
+  }
+
   button {
     background-color: #43a49b;
-    color: #cdfaf6;
+    color: #263339;
     padding: 0.5rem;
     border-radius: 0.375rem;
     font-weight: 500;
@@ -28,13 +43,3 @@
     justify-content: center;
   }
 }
-
-
-
-
-
-
-
-
-
-
