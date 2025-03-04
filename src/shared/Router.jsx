@@ -2,13 +2,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ModifyPost from "../pages/ModifyPost";
 import Post from "../pages/Post";
 import Profile from "../pages/Profile";
+import Home from "../pages/Home";
 
 const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Home />} />
+        {/* <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<SignUp />} /> */}
         <Route path="/posts/:id" element={<Post />} />
         {/* <Route path="/posts-create" element={<CreatePost />} />  */}
