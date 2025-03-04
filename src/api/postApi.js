@@ -10,7 +10,7 @@ export const getPostById = async id => {
     const postId = id;
     const { data, error } = await supabase
       .from("posts")
-      .select("title,content,img_list,location,lat,lng,created_at")
+      .select("title,content,img_list,location,lat,lng,created_at,uid")
       .eq("post_id", postId);
 
     if (error) throw error;
