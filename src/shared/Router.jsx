@@ -5,8 +5,8 @@ import Login from "../pages/Login";
 import SignUp from "../pages/Signup";
 import Post from "../pages/Post";
 import ModifyPost from "../pages/ModifyPost";
-import Post from "../pages/Post";
-import Layout from "./Layout";
+
+
 
 
 const Router = () => {

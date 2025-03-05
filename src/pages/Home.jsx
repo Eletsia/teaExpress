@@ -1,3 +1,5 @@
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import { KakaoMap } from "../api/kakaoAPI";
 import { getPostAll } from "../api/postApi";
 import { useState, useEffect } from "react";
