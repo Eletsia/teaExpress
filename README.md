@@ -1,8 +1,12 @@
-# React + Vite
+# Tea Express
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+인상깊었던 카페 소개 피드 만들기 프로젝트
 
-Currently, two official plugins are available:
+# 메인 페이지 (Home)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# 로그인 관리
+# 게시물 상세페이지
+
+# 게시물 추가페이지
+
+# 게시물 수정페이지
