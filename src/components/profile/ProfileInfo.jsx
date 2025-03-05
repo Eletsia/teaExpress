@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { updataUserInfo } from "../../api/userApi";
+import { loginUseAuth } from "../../store/loginStore";
 
 const ProfileInfo = ({ user }) => {
   const [userData, setUserData] = useState({
@@ -31,7 +32,7 @@ const ProfileInfo = ({ user }) => {
   // 업데이트 후 유저 정보 저장 함수
   const handleSaveProfile = async () => {
     try {
-      const userId = "638c8398-1206-4199-87f9-c4ffb3996fa0";
+      const userId = loginUseAuth.getState().user.id;
 
       const updatedUser = await updataUserInfo(userData, userId);
 
@@ -45,13 +46,17 @@ const ProfileInfo = ({ user }) => {
   };
 
   return (
-    <div className="flex flex-col gap-6 self-start rounded-md border border-[#728f9e] p-6 max-sm:w-full max-sm:items-center">
-      <div className="flex-center w-[180px] rounded-md border border-[#728f9e]">
-        <img src={user?.avatar_img ?? "프로필 이미지"} alt="프로필 이미지" />
+    <div className="flex-center flex-col gap-6 self-start rounded-md border border-[#728f9e] p-6 max-sm:w-full max-sm:items-center">
+      <div className="flex-center h-[180px] w-[180px] rounded-md">
+        <img
+          src={user?.avatar_img ?? "프로필 이미지"}
+          alt="프로필 이미지"
+          className="rounded-md"
+        />
       </div>
 
-      <div className="flex flex-col gap-6 text-center max-sm:w-full">
-        <div className="rounded-md bg-[#d0ebea] p-3">
+      <div className="flex w-[180px] flex-col gap-6 text-center">
+        <div>
           {isEditingProfile ? (
             <input
               type="text"
@@ -61,13 +66,17 @@ const ProfileInfo = ({ user }) => {
                 setUserData(prev => ({ ...prev, nickname: e.target.value }))
               }
               placeholder="새로운 닉네임을 입력해주세요."
-              className="w-full p-1"
+              className="rounded-md border border-gray-300 p-2"
             />
           ) : (
-            <div>{userData.nickname}</div>
+            userData.nickname && (
+              <div className="rounded-md bg-[#d0ebea] p-2">
+                {userData.nickname}
+              </div>
+            )
           )}
         </div>
-        <div className="rounded-md bg-[#d0ebea] p-3">
+        <div>
           {isEditingProfile ? (
             <input
               type="text"
@@ -80,13 +89,20 @@ const ProfileInfo = ({ user }) => {
                 }))
               }
               placeholder="새로운 소개를 입력해주세요."
-              className="w-full p-1"
+              className="rounded-md border border-gray-300 p-2"
             />
           ) : (
-            <div>{userData.introduction}</div>
+            userData.introduction && (
+              <div className="rounded-md bg-[#d0ebea] p-2">
+                {userData.introduction}
+              </div>
+            )
           )}
         </div>
-        <button onClick={toggleEditButton}>
+        <button
+          onClick={toggleEditButton}
+          className="max-sm:w-[180px] max-sm:self-center"
+        >
           {isEditingProfile ? "프로필 수정 완료" : "프로필 수정"}
         </button>
       </div>

@@ -1,75 +1,53 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { loadFile, uploadFile } from "../api/imgApi";
-import { getPostById, updatePost } from "../api/postApi";
+import { getPostById, insertPost, updatePost } from "../api/postApi";
 import { useLoginAuth } from "../hooks/useLoginAuth";
 
-const ModifyPost = () => {
+const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
   const [preImage, setPreImage] = useState("");
   const queryClient = useQueryClient();
-  const { id } = useParams();
   const navigate = useNavigate();
-  const {user} = useLoginAuth();
-
-  // 게시물 정보 가져오기
-  const {
-    data: post,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["post", id],
-    queryFn: () => getPostById(+id),
-    staleTime: 1000 * 60 * 5, // 5분 동안 캐시 유지
-  });
-
-  // 데이터가 존재할 때만 상태 업데이트
-  const currentTitle = title || post?.[0]?.title || "";
-  const currentContent = content || post?.[0]?.content || "";
-  const currentImage = post?.[0]?.img_list || null;
-
-  // 게시물 수정
+  const { user } = useLoginAuth();
+  const { address } = useParams();
+  const { lat } = useParams();
+  const { lng } = useParams();
+  console.log(user.id);
   const mutation = useMutation({
-    mutationFn: ({ newData, id }) => updatePost(newData, id),
+    mutationFn: ({ newData }) => {
+      insertPost(newData, user.id);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(["post"]);
-      alert("게시물이 수정되었습니다.");
-      navigate(`/posts/${id}`);
+
+      alert("게시물이 추가 되었습니다.");
+      navigate(`/`);
     },
   });
-
-  if (isLoading) {
-    return <div>로딩중입니다...</div>;
-  }
-
-  if (isError) {
-    return <div>데이터 조회 중 오류가 발생했습니다.</div>;
-  }
 
   // 게시물 등록 핸들러
   const onSubmitHandler = async e => {
     e.preventDefault();
 
-    let updatedImage = currentImage; // 기존 이미지 유지
+    let updatedImage; // 기존 이미지 유지
 
     if (image) {
       await uploadFile(image);
       updatedImage = await loadFile(image.name);
     }
 
-    // id 숫자 타입으로 변경
     mutation.mutate({
-      id: +id,
       newData: {
-        title: currentTitle,
-        content: currentContent,
+        title: title,
+        content: content,
         img_list: updatedImage,
-        location: post[0].location,
-        lat: post[0].lat,
-        lng: post[0].lng,
+        location: address,
+        lat: lat,
+        lng: lng,
       },
     });
   };
@@ -92,21 +70,13 @@ const ModifyPost = () => {
       className="m-4 mx-auto flex max-w-2xl flex-col items-center gap-6 rounded-lg bg-white p-4 shadow-lg"
       onSubmit={onSubmitHandler}
     >
-      <h3 className="text-2xl font-bold">게시물 수정페이지</h3>
-
-      <div className="flex gap-6 w-full">
+      <h3 className="text-2xl font-bold">게시물 추가 페이지</h3>
+      <div className="flex w-full gap-6">
         <div className="flex flex-col items-center gap-4">
-            <img
-              src={preImage || currentImage}
-              alt="preview"
-              className="w-48 h-auto rounded-lg shadow"
-            />
-          
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-
+          <img
+            src={preImage}
+            alt="preview"
+            className="h-auto w-48 rounded-lg shadow"
           />
 
           <input type="file" accept="image/*" onChange={handleImageChange} />
@@ -118,7 +88,7 @@ const ModifyPost = () => {
             <input
               type="text"
               value={title}
-              placeholder={post[0].title}
+              placeholder="제목을 입력하세요."
               onChange={e => setTitle(e.target.value)}
               className="rounded-lg border border-gray-300 p-2 focus:outline-blue-500"
             />
@@ -133,7 +103,7 @@ const ModifyPost = () => {
               className="h-32 resize-none rounded-lg border border-gray-300 p-2 focus:outline-blue-500"
             />
           </label>
-          <p>{post?.[0]?.location || "위치 정보 없음"}</p>
+          <p>{address}</p>
         </div>
       </div>
 
@@ -142,7 +112,7 @@ const ModifyPost = () => {
           type="submit"
           className="rounded-lg bg-blue-500 px-6 py-2 text-white transition hover:bg-blue-600"
         >
-          수정하기
+          추가하기
         </button>
         <button
           type="button"
@@ -156,4 +126,4 @@ const ModifyPost = () => {
   );
 };
 
-export default ModifyPost;
+export default CreatePost;

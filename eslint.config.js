@@ -35,5 +35,13 @@ export default [
       ],
       "react/prop-types": "off",
     },
+    extends: [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended",
+      "plugin:import/recommended",
+      "plugin:jsx-a11y/recommended", // jsx 접근성 규칙에 대한 검사기
+      "plugin:prettier/recommended", // prettier 추가
+    ],
   },
 ];
