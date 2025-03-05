@@ -13,7 +13,7 @@ const ModifyPost = () => {
   const queryClient = useQueryClient();
   const { id } = useParams();
   const navigate = useNavigate();
-  const {user} = useLoginAuth();
+  const { user } = useLoginAuth();
 
   // 게시물 정보 가져오기
   const {
@@ -94,19 +94,12 @@ const ModifyPost = () => {
     >
       <h3 className="text-2xl font-bold">게시물 수정페이지</h3>
 
-      <div className="flex gap-6 w-full">
+      <div className="flex w-full gap-6">
         <div className="flex flex-col items-center gap-4">
-            <img
-              src={preImage || currentImage}
-              alt="preview"
-              className="w-48 h-auto rounded-lg shadow"
-            />
-          
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-
+          <img
+            src={preImage || currentImage}
+            alt="preview"
+            className="h-auto w-48 rounded-lg shadow"
           />
 
           <input type="file" accept="image/*" onChange={handleImageChange} />
