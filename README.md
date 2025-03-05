@@ -19,6 +19,7 @@ kakao map api를 활용해 만든 사이트입니다.
 <br/>
 # 메인 페이지 (Home)
 <img width="940" alt="image" src="https://github.com/user-attachments/assets/2403fe8e-0ff7-4438-aa45-a17583bc2a2c" />
+<br/>
 메인 페이지에서는 게시물 추가와 kakaoMap api를 통한 마커를 찍을 수 있습니다.
 해당 마커의 위치정보를 기반으로 실제 주소를 얻어와 게시물 정보에 저장할 수 있습니다. 
 
