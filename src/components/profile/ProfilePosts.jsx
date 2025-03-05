@@ -54,10 +54,10 @@ const ProfilePosts = () => {
           className="flex cursor-pointer flex-col gap-6 rounded-2xl border border-[#728f9e] p-4"
         >
           <div className="w-full rounded-md bg-[#e5e5e5] p-2 font-semibold">
-            title : {postItem.title}
+            {postItem.title}
           </div>
           <div className="flex-center">
-            <img src={postItem.img_list} alt="이미지" />
+            <img src={postItem.img_list} alt="이미지" className="h-[200px]" />
           </div>
         </Link>
       );
