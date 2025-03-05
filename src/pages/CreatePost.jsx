@@ -14,7 +14,8 @@ const CreatePost = () => {
   const navigate = useNavigate();
   const { user } = useLoginAuth();
   const { address } = useParams();
-
+  const { lat } = useParams();
+  const { lng } = useParams();
   console.log(user.id);
   const mutation = useMutation({
     mutationFn: ({ newData }) => {
@@ -45,6 +46,8 @@ const CreatePost = () => {
         content: content,
         img_list: updatedImage,
         location: address,
+        lat: lat,
+        lng: lng,
       },
     });
   };

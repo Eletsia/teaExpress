@@ -28,7 +28,7 @@ const useKakaoLoader = () => {
 export const KakaoMap = ({ posts, onAddressChange }) => {
   const kakaoLoaded = useKakaoLoader();
   const [position, setPosition] = useState({
-    lat: 33.5563,
+    lat: 32.5563,
     lng: 126.79581,
   });
   const [address, setAddress] = useState("");
@@ -43,9 +43,9 @@ export const KakaoMap = ({ posts, onAddressChange }) => {
           result[0]?.road_address?.address_name ||
           result[0]?.address?.address_name ||
           "주소 정보를 찾을 수 없음";
-        setAddress(newAddress);
+        setAddress(newAddress, position.lng, position.lat);
         if (onAddressChange) {
-          onAddressChange(newAddress);
+          onAddressChange(newAddress, position.lng, position.lat);
         }
       }
     });
@@ -59,8 +59,8 @@ export const KakaoMap = ({ posts, onAddressChange }) => {
     <div className="flex flex-col gap-6">
       <Map
         center={position}
-        className="h-[300px] w-[500px] max-sm:w-full"
-        level={3}
+        className="h-[600px] w-[1000px] max-sm:w-full"
+        level={9}
         onClick={(_, mouseEvent) => {
           const latlng = mouseEvent.latLng;
           setPosition({ lat: latlng.getLat(), lng: latlng.getLng() });

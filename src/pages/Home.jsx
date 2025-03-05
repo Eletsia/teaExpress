@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [address, setAddress] = useState("");
+  const [lat, setlat] = useState("");
+  const [lng, setlng] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,10 +29,13 @@ const Home = () => {
       alert("포스트를 게시할 곳을 선택해주세요!");
       return;
     }
-    navigate(`posts-create/${address}`);
+    navigate(`posts-create/${address}/${lat}/${lng}`);
   };
-  const handleAddressChange = newAddress => {
+  const handleAddressChange = (newAddress, lat, lng) => {
     setAddress(newAddress);
+    setlat(lat);
+    setlng(lng);
+    console.log(newAddress, lat, lng);
   };
 
   return (

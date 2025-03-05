@@ -10,7 +10,7 @@ import {
 import { getComments, insertComment } from "../api/commentApi";
 import { loadFile } from "../api/imgApi";
 import { deleteLike, getLike, insertLike } from "../api/likeApi";
-import { getPostById } from "../api/postApi";
+import { deletePostById, getPostById } from "../api/postApi";
 import { getUserInfo } from "../api/userApi";
 import { useLoginAuth } from "../hooks/useLoginAuth";
 
@@ -199,6 +199,12 @@ const Post = () => {
       : bookMarkInsertMutation.mutate({ uid: user?.id, id: id });
   };
 
+  const handlerDeletePost = () => {
+    deletePostById(id);
+    alert("게시물 삭제 완료");
+    navigate("/");
+  };
+
   return (
     <div className="w-full">
       <div className="flex-center gap-10 max-md:flex-col">
@@ -255,6 +261,7 @@ const Post = () => {
               <button onClick={bookMarkToggleButton}>
                 {isBooked ? "북마크 on" : "북마크 off"}
               </button>
+              <button onClick={handlerDeletePost}>삭제</button>
             </div>
           </div>
 
