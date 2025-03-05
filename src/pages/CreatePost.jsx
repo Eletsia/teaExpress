@@ -76,59 +76,65 @@ const CreatePost = () => {
 
   return (
     <form
-      className="m-4 mx-auto flex max-w-2xl flex-col items-center gap-6 rounded-lg bg-white p-4 shadow-lg"
+      className="flex-center flex-col gap-4 rounded-md border border-[#728f9e] p-4 max-sm:gap-16"
       onSubmit={onSubmitHandler}
     >
       <h3 className="text-2xl font-bold">게시물 추가 페이지</h3>
-      <div className="flex w-full gap-6">
-        <div className="flex flex-col items-center gap-4">
-          <img
-            src={preImage}
-            alt="preview"
-            className="h-auto w-48 rounded-lg shadow"
-          />
 
-          <input type="file" accept="image/*" onChange={handleImageChange} />
+      {/* 게시물 추가 영역 */}
+      <div className="flex w-full gap-10 max-sm:flex-col">
+        <div className="flex-center flex-col gap-4">
+          {/* 이미지  */}
+          <div className="flex-center h-[200px] w-[200px] rounded-md shadow">
+            <img src={preImage} alt="preview" />
+          </div>
+
+          {/* 파일 선택 영역 */}
+          <div className="text-xs">
+            <input type="file" accept="image/*" onChange={handleImageChange} />
+          </div>
         </div>
 
-        <div className="flex w-full flex-col gap-4">
-          <label className="flex flex-col">
-            <span className="text-lg font-semibold">제목</span>
+        {/* 제목, 내용 추가 영역 */}
+        <div className="flex flex-col gap-4">
+          <label className="flex flex-col gap-2">
+            <p className="font-semibold">제목</p>
             <input
               type="text"
               value={title}
               placeholder="제목을 입력하세요."
               onChange={e => setTitle(e.target.value)}
-              className="rounded-lg border border-gray-300 p-2 focus:outline-blue-500"
+              className="rounded-md border border-[#728f9e] p-2"
             />
           </label>
-          <label className="flex flex-col">
-            <span className="text-lg font-semibold">내용</span>
+
+          <label className="flex flex-col gap-2">
+            <p className="font-semibold">내용</p>
             <input
               type="text"
               value={content}
               placeholder="내용을 입력하세요."
               onChange={e => setContent(e.target.value)}
-              className="h-32 resize-none rounded-lg border border-gray-300 p-2 focus:outline-blue-500"
+              className="h-32 rounded-md border border-[#728f9e] p-2"
             />
           </label>
-          <p>{address}</p>
+          <div className="mb-2 mt-2">
+            <p>{`주소 : ${address}`}</p>
+          </div>
         </div>
       </div>
 
-      <div className="mt-4 flex gap-4">
-        <button
-          type="submit"
-          className="rounded-lg bg-blue-500 px-6 py-2 text-white transition hover:bg-blue-600"
-        >
+      {/* 버튼 */}
+      <div className="flex gap-2">
+        <button type="submit" className="button">
           추가하기
         </button>
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="rounded-lg bg-gray-400 px-6 py-2 text-white transition hover:bg-gray-500"
+          className="button bg-gray-500"
         >
-          뒤로가기
+          뒤로 가기
         </button>
       </div>
     </form>

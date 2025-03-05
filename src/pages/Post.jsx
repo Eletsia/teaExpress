@@ -28,7 +28,6 @@ const Post = () => {
   const [isLiked, setIsLiked] = useState(!likeInit);
   const [isBooked, setIsBooked] = useState(!bookInit);
 
-
   // 게시물 정보 가져오기
   const {
     data: post,
@@ -209,14 +208,13 @@ const Post = () => {
     navigate("/");
   };
 
-
   return (
     <div className="w-full">
       <div className="flex-center gap-10 max-md:flex-col">
         {/* 유저 정보 */}
         <div className="flex w-[180px] flex-col gap-10 self-start rounded-md border border-[#728f9e] p-6 max-md:w-full max-md:items-center">
           {/* 프로필 이미지 */}
-          <div className="flex-center">
+          <div className="flex-center max-md:w-[180px]">
             <img
               src={imageUrl || "프로필 이미지"}
               alt="프로필 이미지"
