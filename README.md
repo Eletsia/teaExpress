@@ -40,11 +40,13 @@ loginStore.js파일에서 로그인 상태및 사용자 정보를 관리합니�
 # 게시물 추가페이지
 <img width="629" alt="image" src="https://github.com/user-attachments/assets/8ce2f28c-1354-4d96-8ba8-8a081f6184a7" />
 <br/>
+<br/>
 추가 페이지에서는 업로드할 이미지를 선택하면 preview 이미지를 보여줍니다
 선택한 마커의 주소정보를 하단에 보여주고 제목과 내용을 입력하여 게시물을 추가할 수 있습니다.
 <br/>
 # 게시물 수정페이지
 <img width="522" alt="image" src="https://github.com/user-attachments/assets/f1b04193-1954-479e-ae82-99f18d3031e9" />
+<br/>
 <br/>
 게시물 수정페이지에서는 기존의 입력한 포스트의 제목과 내용정보를 보여주고 이미 업로드한 사진을 보여줍니다
 
