@@ -18,6 +18,7 @@ kakao map api를 활용해 만든 사이트입니다.
 2025/02/27 ~ 2025/03/05
 
 <br/>
+
 # 메인 페이지 (Home)
 <img width="940" alt="image" src="https://github.com/user-attachments/assets/2403fe8e-0ff7-4438-aa45-a17583bc2a2c" />
 <br/>
