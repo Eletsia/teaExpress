@@ -77,6 +77,8 @@ export const insertPost = async (formData, uid) => {
           content: formData.content,
           img_list: formData.img_list,
           location: formData.location,
+          lat: formData.lng,
+          lng: formData.lat,
         },
       ])
       .select();
