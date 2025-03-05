@@ -12,7 +12,7 @@ const useKakaoLoader = () => {
 
     const script = document.createElement("script");
     script.src =
-      "https://dapi.kakao.com/v2/maps/sdk.js?appkey=44f25cb020400a3651519041b51ac8e8&libraries=services&autoload=false";
+      "https://dapi.kakao.com/v2/maps/sdk.js?appkey=769920dfbbdc3d3e97fc6dcd10a1137e&libraries=services&autoload=false";
     script.async = true;
     script.onload = () => {
       window.kakao.maps.load(() => setKakaoLoaded(true));
@@ -28,7 +28,7 @@ const useKakaoLoader = () => {
 export const KakaoMap = ({ posts, onAddressChange }) => {
   const kakaoLoaded = useKakaoLoader();
   const [position, setPosition] = useState({
-    lat: 32.5563,
+    lat: 37.5563,
     lng: 126.79581,
   });
   const [address, setAddress] = useState("");

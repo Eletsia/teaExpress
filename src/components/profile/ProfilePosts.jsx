@@ -58,6 +58,7 @@ const ProfilePosts = () => {
           </div>
           <div className="flex-center">
             <img src={postItem.img_list} alt="이미지" className="h-[200px]" />
+
           </div>
         </Link>
       );
