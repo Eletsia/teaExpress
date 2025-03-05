@@ -201,7 +201,7 @@ const Post = () => {
 
   const handlerDeletePost = () => {
     deletePostById(id);
-    alert("게시물 삭제 완료");
+    alert("게시물이 삭제되었습니다!");
     navigate("/");
   };
 
