@@ -1,11 +1,18 @@
-import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { loginUseAuth } from "../store/loginStore"; // Zustand 상태관리 import
-import supabase from '../shared/supabase';
-
+import supabase from "../shared/supabase";
 
 // 로그인 API 호출
 const signIn = async ({ email, password }) => {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password }); // SupabaseClient → supabase 수정
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  }); // SupabaseClient → supabase 수정
   if (error) throw error;
   return data;
 };
@@ -43,13 +50,13 @@ export const useLoginAuth = () => {
   });
 
   // Google 로그인 API 호출
-const signInWithGoogle = async () => {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-  });
-  if (error) throw error;
-  return data;
-};
+  const signInWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+    if (error) throw error;
+    return data;
+  };
 
   // 로그인 요청 처리 (useMutation)
   const signInMutation = useMutation({
@@ -63,10 +70,10 @@ const signInWithGoogle = async () => {
   // 회원가입 요청 처리 (useMutation)
   const signUpMutation = useMutation({
     mutationFn: signUp,
-    onSuccess: (data) => {
+    onSuccess: data => {
       setUser(data.user); // Zustand 상태 업데이트
     },
-    onError: (error) => {
+    onError: error => {
       console.error("회원가입 오류 발생:", error);
       alert("회원가입 중 문제가 발생했습니다.");
     },
@@ -79,27 +86,32 @@ const signInWithGoogle = async () => {
       logout(); // Zustand에서 user 상태 초기화
       queryClient.invalidateQueries(["authUser"]); // 로그아웃 후 캐시 삭제
     },
-    onError: (error) => {
+    onError: error => {
       console.error("로그아웃 오류 발생:", error);
       alert("로그아웃 중 문제가 발생했습니다.");
     },
-    
   });
 
-    // Google 로그인 요청 처리
-    const googleSignInMutation = useMutation({
-      mutationFn: signInWithGoogle,
-      onSuccess: async () => {
-        const { data, error } = await supabase.auth.getUser(); // 로그인 후 사용자 정보 가져오기
-        if (!error) {
-          setUser(data.user); // Zustand에 상태 업데이트
-        }
-      },
-      onError: (error) => {
-        console.error("Google 로그인 오류:", error);
-        alert("Google 로그인 중 문제가 발생했습니다.");
-      },
-    });
+  // Google 로그인 요청 처리
+  const googleSignInMutation = useMutation({
+    mutationFn: signInWithGoogle,
+    onSuccess: async () => {
+      const { data, error } = await supabase.auth.getUser(); // 로그인 후 사용자 정보 가져오기
+      if (!error) {
+        setUser(data.user); // Zustand에 상태 업데이트
+      }
+    },
+    onError: error => {
+      console.error("Google 로그인 오류:", error);
+      alert("Google 로그인 중 문제가 발생했습니다.");
+    },
+  });
 
-  return { user, signInMutation, signUpMutation, logoutMutation, googleSignInMutation };
+  return {
+    user,
+    signInMutation,
+    signUpMutation,
+    logoutMutation,
+    googleSignInMutation,
+  };
 };
