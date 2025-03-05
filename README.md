@@ -26,6 +26,10 @@ kakao map api를 활용해 만든 사이트입니다.
 해당 마커의 위치정보를 기반으로 실제 주소를 얻어와 게시물 정보에 저장할 수 있습니다. <br/>
 
 # 로그인 관리
+![2025-03-05 12 22 43](https://github.com/user-attachments/assets/aaa570b3-a734-49b6-aace-90cf0dcfac1c)
+![2025-03-05 12 22 33](https://github.com/user-attachments/assets/b963e27c-ab38-46fc-907d-df897d48f683)
+
+
 supabase의 authentication api를 활용해서 만들었습니다<br/>
 loginStore.js파일에서 로그인 상태및 사용자 정보를 관리합니다<br/>
 텐스텍 쿼리의 useMutation으로 비동기 로그인 처리및 캐시정보를 관리합니다<br/>
