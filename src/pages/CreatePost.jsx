@@ -16,14 +16,23 @@ const CreatePost = () => {
   const { address } = useParams();
   const { lat } = useParams();
   const { lng } = useParams();
-  console.log(user.id);
+
+  const {
+    data: post,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["post", user.id],
+    queryFn: () => insertPost(newData, user.id),
+    staleTime: 1000 * 60 * 5, // 5분 동안 캐시 유지
+  });
+
   const mutation = useMutation({
     mutationFn: ({ newData }) => {
       insertPost(newData, user.id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["post"]);
-
       alert("게시물이 추가 되었습니다.");
       navigate(`/`);
     },

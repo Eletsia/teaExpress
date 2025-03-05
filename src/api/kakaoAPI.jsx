@@ -28,7 +28,7 @@ const useKakaoLoader = () => {
 export const KakaoMap = ({ posts, onAddressChange }) => {
   const kakaoLoaded = useKakaoLoader();
   const [position, setPosition] = useState({
-    lat: 32.5563,
+    lat: 37.5563,
     lng: 126.79581,
   });
   const [address, setAddress] = useState("");
