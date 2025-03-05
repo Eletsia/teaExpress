@@ -37,6 +37,7 @@ loginStore.js파일에서 로그인 상태및 사용자 정보를 관리합니�
 북마크와 좋아요 설정이 가능하며<br/>
 삭제시 게시물에 있는 모든 유저의 좋아요 북마크 정보와 댓글 정보 모두 삭제됩니다.<br/>
 <br/>
+
 # 게시물 추가페이지
 <img width="629" alt="image" src="https://github.com/user-attachments/assets/8ce2f28c-1354-4d96-8ba8-8a081f6184a7" />
 <br/>
@@ -44,6 +45,7 @@ loginStore.js파일에서 로그인 상태및 사용자 정보를 관리합니�
 추가 페이지에서는 업로드할 이미지를 선택하면 preview 이미지를 보여줍니다.<br/>
 선택한 마커의 주소정보를 하단에 보여주고 제목과 내용을 입력하여 게시물을 추가할 수 있습니다.<br/>
 <br/>
+
 # 게시물 수정페이지
 <img width="522" alt="image" src="https://github.com/user-attachments/assets/f1b04193-1954-479e-ae82-99f18d3031e9" />
 <br/>
