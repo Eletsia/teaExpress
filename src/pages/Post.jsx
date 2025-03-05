@@ -12,9 +12,11 @@ import { loadFile } from "../api/imgApi";
 import { deleteLike, getLike, insertLike } from "../api/likeApi";
 import { deletePostById, getPostById } from "../api/postApi";
 import { getUserInfo } from "../api/userApi";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import { useLoginAuth } from "../hooks/useLoginAuth";
 
-// 상세페이지 : 게시물 조회, 댓글 ,수정페이지로 이동, 상세페이지에 접속한 user의 uid값 가져오기
+// 상세페이지-> 게시물 조회,댓글 달기,수정페이지로 이동,상세페이지에 접속한 user uid가져오기
 const Post = () => {
   const queryClient = useQueryClient();
   const { id } = useParams();
@@ -25,6 +27,7 @@ const Post = () => {
   const bookInit = isBookMarked(user.id, id);
   const [isLiked, setIsLiked] = useState(!likeInit);
   const [isBooked, setIsBooked] = useState(!bookInit);
+
 
   // 게시물 정보 가져오기
   const {
@@ -186,6 +189,7 @@ const Post = () => {
   // 좋아요
   const likeToggleButton = () => {
     setIsLiked(prevState => !prevState);
+
     isLiked
       ? likeDeleteMutation.mutate({ uid: user?.id, id: id })
       : likeInsertMutation.mutate({ uid: user?.id, id: id });
@@ -204,6 +208,7 @@ const Post = () => {
     alert("게시물 삭제 완료");
     navigate("/");
   };
+
 
   return (
     <div className="w-full">
@@ -247,7 +252,6 @@ const Post = () => {
           <div className="flex items-center justify-between gap-2">
             {/* 뒤로 가기 */}
             <button onClick={() => navigate(-1)}>뒤로 가기</button>
-
             {/* 게시물 제목 */}
             <div className="p-2 text-xl font-bold">
               {post?.[0]?.title || "제목 없음"}
